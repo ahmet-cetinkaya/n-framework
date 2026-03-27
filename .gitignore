@@ -1,0 +1,27 @@
+# C#
+bin/
+obj/
+.config/dotnet-tools.lock
+.config/dotnet-tools.local.json
+
+# JS
+node_modules/
+
+# Agents
+.agents/
+.claude/
+.codex/
+.serena/
+.specify/
+AGENTS.md
+CLAUDE.md
+
+# Editor and OS noise
+.DS_Store
+.idea/
+.local/
+.log/
+.vscode/
+*.swp
+*.tmp
+Thumbs.db

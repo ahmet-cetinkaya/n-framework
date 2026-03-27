@@ -1,6 +1,9 @@
-# NFramework
+<!-- markdownlint-disable MD041 -->
+
+# `NFramework`
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/n-framework/n-framework?style=social)](https://github.com/n-framework/n-framework/stargazers)
 [![GitHub stars](https://img.shields.io/github/stars/n-framework/n-framework?style=social)](https://github.com/n-framework/n-framework/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/n-framework/n-framework?style=social)](https://github.com/n-framework/n-framework/network/members)
 [![GitHub contributors](https://img.shields.io/github/contributors/n-framework/n-framework)](https://github.com/n-framework/n-framework/graphs/contributors)

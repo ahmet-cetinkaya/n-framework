@@ -8,8 +8,6 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # shellcheck disable=SC1091
 source "${SCRIPT_DIR}/common.sh"
 
-init_environment
-
 cd "$REPO_ROOT"
 
 acore_log_section "🔍 Linting shell scripts with shellcheck..."

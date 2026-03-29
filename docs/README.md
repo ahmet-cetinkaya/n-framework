@@ -2,6 +2,6 @@
 
 This is the entry point for NFramework documentation.
 
-Start with the product requirements document:
+## Documents
 
 - [PRD.md](PRD.md) — Product scope, goals, user stories, and technical considerations

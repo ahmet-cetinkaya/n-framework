@@ -311,7 +311,7 @@ Exit criteria:
 - [ ] A generated hello-world `.NET` service builds with `0` Native AOT or trimming warnings
 - [ ] A generated standard `.NET` service cold-starts in less than `50 ms` under the agreed benchmark conditions
 - [ ] Generating a standard CRUD flow takes less than `10 seconds`
-- [ ] Creating a new workspace completes in less than `3 seconds` on the agreed baseline machine
+- [ ] Creating a new workspace completes in less than `1 second` on the agreed baseline machine
 - [ ] Generated starter solutions build and test successfully in CI without manual patch steps
 - [ ] External adopters can follow the documentation without reverse-engineering generated code
 

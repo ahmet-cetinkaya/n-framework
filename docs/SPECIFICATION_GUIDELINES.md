@@ -49,7 +49,6 @@ Rule: implementation decisions (project structure, commands, exit codes, interfa
 
 Minimum sections (module specs and orchestrator specs can be lighter or heavier, but must be testable):
 
-- **Header metadata**: feature branch, spec type, project, status, spec instruction
 - User Scenarios & Testing: user stories with priorities, rationale, independent tests, and acceptance scenarios (Given/When/Then format)
 - Requirements: functional requirements (FR-XXX numbered) and any key entities
 - Success Criteria: measurable outcomes (SC-XXX numbered)
@@ -58,6 +57,23 @@ Minimum sections (module specs and orchestrator specs can be lighter or heavier,
 - Clarifications: Q&A from specification sessions (optional but recommended)
 - Non-goals: explicit out-of-scope items
 - Edge cases: invalid input, partial failures, offline modes, cancellation (Ctrl+C), etc.
+
+### Spec Writing Rules
+
+Specs should read like natural human writing. Avoid tool-generated markers and framework-specific keywords, for example:
+
+- Do not include `_(mandatory)_` annotations on section headers.
+- Do not include `**Feature Branch**`, `**Spec Type**`, `**Project**`, `**Created**`, `**Status**`, or `**Spec Instruction**` metadata headers.
+- Do not reference `.specify/` paths or external spec tooling (e.g., `.specify/SPEC_ORGANIZATION.md`).
+- Do not include `> **Note**: This spec is organized as...` disclaimers.
+- Under `## Clarifications`, list Q&A items directly. Do not add `### Session YYYY-MM-DD` sub-headings.
+- Do not reference tool commands like `/speckit.clarify`, `/speckit.plan`, `/speckit.tasks`.
+
+In module `tasks.md`, keep task organization markers — they are useful for planning:
+
+- `[P]` marks tasks that can run in parallel (different files, no blocking dependencies).
+- `[US1]` through `[US5]` mark which user story a task belongs to.
+- These should NOT be removed when cleaning specs.
 
 For orchestrator specs, keep the artifact set minimal unless a stronger need exists:
 
@@ -72,16 +88,7 @@ Do not create extra design documents such as `research.md`, `data-model.md`, `co
 ```markdown
 # Feature Specification: <Title>
 
-**Feature Branch**: `<id>-<slug>`
-**Spec Type**: Project-Based
-**Project**: <project-name>
-**Created**: YYYY-MM-DD
-**Status**: Draft | In Review | Approved | Implemented
-**Spec Instruction**: User description: "<one-line summary>"
-
-> **Note**: This spec is organized as project-based. See `.specify/SPEC_ORGANIZATION.md` for details on spec organization types.
-
-## User Scenarios & Testing _(mandatory)_
+## User Scenarios & Testing
 
 ### User Story 1 - <Title> (Priority: P1)
 
@@ -111,7 +118,7 @@ As a <user type>, I want to <action> so I can <benefit>.
 - **Invalid command**: When an unknown command is entered...
 - **Interrupt signal**: When the user sends Ctrl+C...
 
-## Requirements _(mandatory)_
+## Requirements
 
 ### Functional Requirements
 
@@ -124,7 +131,7 @@ As a <user type>, I want to <action> so I can <benefit>.
 - **<Entity 1>**: <definition/description>
 - **<Entity 2>**: <definition/description>
 
-## Success Criteria _(mandatory)_
+## Success Criteria
 
 ### Measurable Outcomes
 
@@ -145,13 +152,7 @@ As a <user type>, I want to <action> so I can <benefit>.
 
 ## Clarifications
 
-### Session YYYY-MM-DD
-
 - Q: <question>? → A: <answer>
-- Q: <question>? → A: <answer>
-
-### Session YYYY-MM-DD
-
 - Q: <question>? → A: <answer>
 
 ## Non-Goals
@@ -231,9 +232,26 @@ Common edge cases to address in specs:
 
 When writing `specs/<id>-<slug>/tasks.md` for a meta-repo spec:
 
-- Organize tasks by user story or milestone.
+- **Organize tasks by feature**, not by milestone. Group related work (e.g., template metadata schema + `nfw templates` command) into a single feature entry. Each feature produces one spec in its most natural location.
+- Fold cross-cutting concerns (CLI routing, command parsing) into the feature that first needs them, rather than creating a separate spec.
 - Each task should identify the target project spec path.
 - Each task should include the exact spec instruction text that should be used to create that project-level spec.
-- **Task format**: Use the pattern `- [ ] T### <action> spec topic in <path> with spec instruction: <spec instruction text>` for consistency.
+- **Task format**: Use the pattern `- [ ] F#-T### <action> spec topic in <path> with spec instruction: <spec instruction text>` for consistency, where `F#` is the feature number and `T###` is the task number within that feature.
+- Include a `_Maps to:_` line tracing back to original milestone tasks when reorganizing from a milestone-based plan.
+- Include a `_Status:_` line when a spec already partially exists.
 - Do not write project implementation tasks in the root orchestrator `tasks.md`.
 - Do not restate code-level file edits, tests, or service registrations there; those belong in the downstream project specs and their own planning artifacts.
+
+### Example Feature-Based Task Structure
+
+```markdown
+## F1 — Template System
+
+### F1-T001
+
+- [ ] Create spec topic in `src/nfw/specs/` with spec instruction: Define the template metadata schema, template repository format, git-based template discovery, template versioning rules, and the `nfw templates` command that lists available starter templates with identifiers, descriptions, and git repository URLs, supporting both local and remote template repositories.
+
+_Status_: Partially exists as `src/nfw/specs/001-nfw-template-system/` — review and extend if needed.
+
+_Maps to_: M1-T001, M2-T005
+```

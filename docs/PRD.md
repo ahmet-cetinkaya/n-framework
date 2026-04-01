@@ -34,6 +34,7 @@ NFramework must solve these issues with a unified CLI, compile-time code generat
 - Keep domain and application code free from infrastructure dependencies.
 - Make generated .NET services fully trimmable and Native AOT compatible.
 - Use compile-time code generation instead of runtime reflection for service registration, routing, and related framework mechanics.
+- All framework packages (Domain, Application, Infrastructure, Api, and abstraction packages) must have zero external library dependencies. All library integrations must live in separate adapter packages.
 - Reduce time-to-first-service and time-to-first-CRUD endpoint to seconds, not hours.
 - Preserve high-value framework workflows such as template-based project creation, command/query generation, repository-driven CRUD scaffolding, and common cross-cutting feature toggles.
 - Support the required `.NET` service topic areas of persistence, security, validation, mapping, logging, exception handling, localization, notification, and search through first-party abstractions plus adapters.
@@ -52,22 +53,25 @@ NFramework must solve these issues with a unified CLI, compile-time code generat
 
 ## 5. Product Principles
 
-1. **Compile-Time Magic Over Runtime Magic**  
-   Framework behavior such as DI registration, route discovery, and supporting boilerplate should be generated at build time whenever practical.
+1. **Clean Architecture and Clean Code by Default**
+   NFramework must guide projects toward Clean Architecture and Clean Code principles by design. Layer boundaries, dependency direction, naming conventions, explicit result types, and generated code structure must all reinforce separation of concerns, readability, and maintainability without requiring manual discipline to stay consistent.
 
-2. **Pure Core**  
+2. **Pure Core**
    Domain and application layers must not directly depend on persistence libraries, Dapr, RabbitMQ, HTTP frameworks, or other infrastructure libraries.
 
-3. **Exception-Free Business Flow**  
+3. **Zero-Dependency Layers with Replaceable Adapters**
+   All framework packages must have zero external library dependencies. Third-party integrations live in separate adapter packages that depend on framework abstractions, never the reverse. Adapters forward calls directly without wrapper allocations, and swapping adapters must not touch domain or application code.
+
+4. **Exception-Free Business Flow**
    Application and domain workflows should prefer `Result<T>` or equivalent explicit outcome types over exceptions for expected business outcomes.
 
-4. **Infrastructure as Replaceable Adapters**  
-   NFramework must define abstractions per topic, and the codebase must depend on those abstractions. Databases, caches, queues, cloud integrations, and other popular libraries must be connected through adapters so services can change implementations without rewriting core business logic.
+5. **Compile-Time Magic Over Runtime Magic**
+   Framework behavior such as DI registration, route discovery, and supporting boilerplate should be generated at build time whenever practical.
 
-5. **Cloud-Native by Default**  
-   Telemetry, logging, metrics, local orchestration, and service-to-service communication should be part of the generated baseline, not optional afterthoughts.
+6. **Ready for Microservices**
+   NFramework must produce services that are ready for microservice deployment from day one. Telemetry, logging, metrics, health checks, inter-service communication, local orchestration, containerization, and distributed observability should be part of the generated baseline, not optional afterthoughts. Services must be independently deployable, horizontally scalable, and resilient by default.
 
-6. **One Standard, Many Languages**  
+7. **One Standard, Many Languages**
    The workspace model, folder structure, naming conventions, and contract model should remain stable even when services are implemented in different languages.
 
 ## 6. Scope
@@ -471,7 +475,7 @@ NFramework must solve these issues with a unified CLI, compile-time code generat
 - A generated "hello world" .NET microservice builds with **0** Native AOT or trimming warnings.
 - A generated standard .NET microservice cold-starts in **less than 50 ms** under the agreed benchmark conditions.
 - Generating a standard CRUD flow from the CLI takes **less than 10 seconds** from command execution to a buildable endpoint.
-- Creating a new workspace completes in **less than 3 seconds** on the agreed baseline developer machine.
+- Creating a new workspace completes in **less than 1 second** on the agreed baseline developer machine.
 - Cross-language gRPC overhead between two generated services is **less than 2 ms** once polyglot support is delivered.
 - A .NET developer can understand the structure of a generated Go service in **10 minutes or less** using NFramework conventions and documentation.
 - Generated starter solutions build and test successfully in CI without manual patch steps.

@@ -49,7 +49,7 @@ See [tasks.md](./tasks.md) for detailed spec instruction text for each downstrea
 - Template metadata schema must be agreed upon before CLI and template repository implementation begins
 - Namespace conventions must be locked before service scaffolding is implemented
 - Architecture rule definitions must be stable before validation implementation begins
-- Benchmark harness must be defined to validate SC-001 performance target (workspace creation in <3 seconds on 2 CPU cores, 4GB RAM)
+- Benchmark harness must be defined to validate SC-001 performance target (workspace creation in <1 second on 2 CPU cores, 4GB RAM)
 
 ## Risk Mitigation
 

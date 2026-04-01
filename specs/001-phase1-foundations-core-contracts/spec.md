@@ -1,18 +1,10 @@
 # Feature Specification: Phase 1 - Workspace and Core Foundations
 
-**Feature Branch**: `001-phase1-foundations-core-contracts`
-**Spec Type**: Monorepo
-**Project**: N/A
-**Created**: 2026-03-28
-**Status**: Draft
-
-> **Note**: This spec is organized as monorepo. See `.specify/SPEC_ORGANIZATION.md` for details on spec organization types.
-
 ## Overview
 
 This specification defines the orchestration work required to establish the foundational workspace model, CLI/TUI entry point, and core package boundaries for NFramework. This phase creates the shortest path to one-command workspace setup, enforceable Clean Architecture boundaries, and a usable .NET baseline that later compile-time tooling can rely on.
 
-## User Scenarios & Testing _(mandatory)_
+## User Scenarios & Testing
 
 ### User Story 1 - Create New Workspace (Priority: P1)
 
@@ -126,7 +118,7 @@ As a developer, I want to see available starter templates so that I can choose a
 - **Missing workspace context**: When `nfw add service` is run outside a workspace (no `nfw.yaml` found in current directory or parent directories), the CLI exits with an error indicating the command must be run within a workspace.
 - **Conflicting service names**: When a service with the same name already exists, the CLI exits with an error and suggests using a different name or `--force` to overwrite.
 
-## Requirements _(mandatory)_
+## Requirements
 
 ### Functional Requirements
 
@@ -195,11 +187,11 @@ Architecture rules enforced include: Layer dependency rules (Domain→no Infra/A
 - **Entity**: Domain object with identity, inheriting from framework base abstractions
 - **Result**: Explicit outcome type representing success or failure with actionable error information
 
-## Success Criteria _(mandatory)_
+## Success Criteria
 
 ### Measurable Outcomes
 
-- **SC-001**: A new .NET workspace and service can be created from the CLI in less than 3 seconds on baseline developer hardware (2 CPU cores, 4GB RAM, measured via automated benchmark harness)
+- **SC-001**: A new .NET workspace and service can be created from the CLI in less than 1 second on baseline developer hardware (2 CPU cores, 4GB RAM)
 - **SC-002**: Generated projects compile without manual file edits 100% of the time
 - **SC-003**: Template selection works in both interactive and non-interactive flows with 100% success rate
 - **SC-004**: Core domain abstractions are usable without infrastructure dependencies (verified by dependency analysis)
@@ -228,8 +220,6 @@ Architecture rules enforced include: Layer dependency rules (Domain→no Infra/A
 
 ## Clarifications
 
-### Session 2026-03-28 (Initial)
-
 - Q: Should the workspace creation support custom folder structures or only the standard NFramework layout? → A: Only the standard NFramework layout is supported in Phase 1. Custom layouts are out of scope to ensure generator stability and architecture enforcement.
 - Q: Can users skip certain layers (e.g., create a service without Infrastructure layer)? → A: No. All four layers (Domain, Application, Infrastructure, Api) are mandatory to preserve architectural boundaries.
 - Q: Should `nfw check` support auto-fix for violations or only detection? → A: Detection only in Phase 1. Auto-fix is deferred to a later phase to avoid unexpected code modifications.
@@ -239,9 +229,6 @@ Architecture rules enforced include: Layer dependency rules (Domain→no Infra/A
 - Q: What protocol should be used for remote template repositories? → A: Git-based templates (clone repos for templates)
 - Q: What format should `nfw.yaml` use for workspace configuration? → A: YAML format
 - Q: How should template git clone operations be tested? → A: Unit tests mock git operations (no network access); integration tests use real git clone but are clearly isolated and labeled as integration tests
-
-### Session 2026-03-28 (Analysis Remediation)
-
 - Q: What is the baseline developer hardware for performance targets? → A: 2 CPU cores, 4GB RAM
 - Q: What cleanup should occur on Ctrl+C interrupt? → A: Delete any partially created files or directories, exit with code 130 on Unix-like systems
 

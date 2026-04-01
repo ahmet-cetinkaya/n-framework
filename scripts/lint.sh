@@ -2,28 +2,19 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=packages/acore-scripts/src/logger.sh
+source "${SCRIPT_DIR}/../packages/acore-scripts/src/logger.sh"
+
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-
-# shellcheck source=./common.sh
-# shellcheck disable=SC1091
-source "${SCRIPT_DIR}/common.sh"
-
 cd "$REPO_ROOT"
 
-acore_log_section "🔍 Linting shell scripts with shellcheck..."
-mapfile -t shellcheck_scripts < <(fd -e sh -t f . "$REPO_ROOT/scripts")
-if [ ${#shellcheck_scripts[@]} -eq 0 ]; then
-	acore_log_warning "No shell scripts found."
-	exit 0
-fi
-shellcheck "${shellcheck_scripts[@]}"
-
-acore_log_section "🔍 Linting markdown files with markdownlint-cli2..."
-mapfile -t markdown_files < <(fd -e md -t f . "$REPO_ROOT")
-if [ ${#markdown_files[@]} -eq 0 ]; then
-	acore_log_warning "No markdown files found."
-	exit 0
-fi
-bun run markdownlint-cli2 --fix "${markdown_files[@]}"
+acore_log_section "🔍 Running helper lint scripts..."
+for helper_lint in "${SCRIPT_DIR}/helpers"/*/lint.sh; do
+	[ -f "$helper_lint" ] || continue
+	helper_name="$(basename "$(dirname "$helper_lint")")"
+	acore_log_info "▶️ Running ${helper_name} lint..."
+	bash "$helper_lint"
+done
 
 acore_log_success "✨ Linting complete!"

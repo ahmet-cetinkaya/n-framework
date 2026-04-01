@@ -6,11 +6,20 @@ obj/
 
 # JS
 node_modules/
+dist/
+build/
+*.log
+.env*
+
+# Rust
+target/
 
 # Agents
 .agents/
 .claude/
 .codex/
+.kilo/
+.opencode/
 .serena/
 .specify/
 AGENTS.md

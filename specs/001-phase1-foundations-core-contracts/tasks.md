@@ -8,7 +8,7 @@ Tasks are organized by feature. Each feature produces one spec in its most natur
 
 ### F1-T001
 
-- [ ] Create spec topic in `src/nfw/specs/` with spec instruction: Define the template metadata schema, template repository format, git-based template discovery, template versioning rules, and the `nfw templates` command that lists available starter templates with identifiers, descriptions, and git repository URLs, supporting both local and remote template repositories.
+- [x] Create spec topic in `src/nfw/specs/` with spec instruction: Define the template metadata schema, template repository format, git-based template discovery, template versioning rules, and the `nfw templates` command that lists available starter templates with identifiers, descriptions, and git repository URLs, supporting both local and remote template repositories.
 
 _Status_: Partially exists as `src/nfw/specs/001-nfw-template-system/` — review and extend if needed.
 

@@ -223,7 +223,7 @@ Common edge cases to address in specs:
 
 1. Write or update the orchestrator spec in this meta-repo when the change spans multiple module repositories or needs root-level coordination.
 2. Use the orchestrator `tasks.md` to define which project-level spec topics must be created next and include the exact spec instruction text for each one.
-3. Create those project-level specs in the relevant module repositories.
+3. Create those project-level specs in the relevant module repositories on feature branches (do not commit specs directly to the default branch).
 4. Implement via PRs against the module repo default branches.
 5. Update the submodule pointers in the meta-repo after the module PRs are merged.
 6. Verify using the acceptance criteria and validation steps described in the orchestrator spec.

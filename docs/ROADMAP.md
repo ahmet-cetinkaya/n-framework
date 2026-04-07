@@ -66,7 +66,7 @@ These follow-on items remain part of the broader beta train because PRD section 
 Target window: April-May 2026
 
 Goal:
-Establish the Rust CLI/TUI, workspace shape, service scaffold, and core package boundaries needed for every later generator and adapter investment.
+Establish the Rust CLI/TUI, workspace shape, service scaffold, and interactive interface needed for every later generator and adapter investment.
 
 Why this phase matters:
 This phase creates the shortest path to the PRD promise of one-command workspace setup, enforceable Clean Architecture boundaries, and a usable `.NET` baseline that later compile-time tooling can rely on while the Rust CLI/TUI provides the interactive front door.
@@ -75,7 +75,7 @@ Milestones:
 
 - [ ] M1: Lock workspace structure, namespace conventions, and template metadata model
 - [ ] M2: Ship the Rust `nfw` CLI/TUI, including `nfw templates`, `nfw new`, and `nfw add service --lang dotnet`
-- [ ] M3: Establish `NFramework.Domain`, `NFramework.Application`, and baseline architecture rules
+- [ ] M3: Deliver comprehensive TUI interface for workspace and service management
 
 Planned deliverables:
 
@@ -83,12 +83,16 @@ Planned deliverables:
 - [ ] Template catalog, template version rules, and remote catalog support
 - [ ] Workspace creation with documented build and test commands
 - [ ] TUI flows for interactive template selection and workspace confirmation
+- [ ] TUI dashboard for workspace overview with service status and health indicators
+- [ ] TUI interactive service creation wizard with validation and real-time feedback
+- [ ] TUI command palette for quick access to all `nfw` commands
+- [ ] TUI configuration editor for workspace and service settings
+- [ ] TUI progress indicators and diagnostics for long-running operations
 - [ ] `.NET` service scaffold with `Domain`, `Application`, `Infrastructure`, and `Api` projects
 - [ ] Sample health or readiness endpoint in generated services
-- [ ] Base domain abstractions for entities, aggregates, value objects, and domain events
-- [ ] Base application abstractions for `Result` and `Result<T>`
 - [ ] Initial layer rules, package boundaries, and forbidden dependency definitions
 - [ ] CLI smoke tests for template selection and workspace generation
+- [ ] TUI integration tests for interactive workflows
 
 Dependencies:
 
@@ -97,33 +101,26 @@ Dependencies:
 - [ ] Define the sample workspace used by smoke tests, AOT checks, and future generator fixtures
 - [ ] Keep build and test entry points stable so later phases do not break onboarding
 
-Resource estimate:
-
-- `3` framework and platform engineers
-- `1` Rust CLI/TUI engineer
-- `0.5` QA automation support
-- Approximate effort: `34-38` engineer-weeks
-
 Risk mitigation:
 
 - [ ] Freeze workspace conventions at the phase boundary to avoid generator churn in later phases
 - [ ] Add smoke tests early for interactive and non-interactive command paths
-- [ ] Keep domain and application packages free from infrastructure references from the first generated sample onward
+- [ ] Validate TUI usability with real developer workflows before phase exit
 
 Exit criteria:
 
 - [ ] A new `.NET` workspace and service can be created from the Rust CLI/TUI
 - [ ] Generated projects compile without manual file edits
 - [ ] Template selection works in interactive and non-interactive flows
-- [ ] Core abstractions are usable without infrastructure dependencies
+- [ ] TUI provides complete interactive coverage for all Phase 1 CLI commands
 - [ ] The project exposes a documented single build command and single test command
 
 PRD traceability:
 
 - [ ] Section `3`: goals for CLI workflow, coherent `.NET` service framework, architecture enforcement, and time-to-first-service
-- [ ] Section `6`: initial beta scope for CLI, service creation, core packages, and documentation
-- [ ] Section `7`: `US-001`, `US-002`, `US-005`, `US-006`
-- [ ] Section `8`: `FR-1` to `FR-6`, `FR-11` to `FR-15`, `FR-36`
+- [ ] Section `6`: initial beta scope for CLI, service creation, and documentation
+- [ ] Section `7`: `US-001`, `US-002`
+- [ ] Section `8`: `FR-1` to `FR-6`, `FR-11`, `FR-36`
 - [ ] Section `11`: template determinism, one-command build/test workflows, and the CLI implementation choice reflected in this roadmap
 
 ## Phase 2: Compile-Time Application Model

@@ -78,8 +78,8 @@ NFramework must solve these issues with a unified CLI, compile-time code generat
 
 ### In Scope for Initial Beta
 
-- `nfw` CLI with template listing, workspace creation, .NET service creation, entity generation, command generation, query generation, and architecture validation.
-- `NFramework.Domain`, `NFramework.Application`, and topic packages required for the standalone .NET service path.
+- `nfw` CLI/TUI with template listing, workspace creation, .NET service creation, entity generation, command generation, query generation, and architecture validation.
+- Interactive TUI interface for workspace management, service creation wizards, command palette, and real-time diagnostics.
 - Source-generated DI registration and Minimal API route generation for .NET services.
 - Framework-native CQRS execution with commands, queries, events, stream requests, and behaviors for .NET.
 - Topic-specific abstractions used across the codebase, with infrastructure adapters for popular libraries and providers.

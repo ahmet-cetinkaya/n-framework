@@ -24,9 +24,13 @@ source "${SCRIPT_DIR}/helpers/tools.sh"
 # shellcheck disable=SC1091
 source "${SCRIPT_DIR}/helpers/sync.sh"
 
+# shellcheck source=./helpers/makefile.sh
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/helpers/makefile.sh"
+
 ensure_submodules
 sync_dotfiles
 ensure_tools
 sync_scripts
-
+ensure_project_makefiles
 acore_log_success "✨ Dev environment ready!"

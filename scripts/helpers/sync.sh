@@ -18,7 +18,7 @@ sync_acore_scripts() {
 		git -C "$REPO_ROOT" submodule add git@github.com:ahmet-cetinkaya/acore-scripts.git "$acore_path"
 	fi
 
-	if git -C "$REPO_ROOT" submodule status "$acore_path" 2> /dev/null | grep -q '^[-]'; then
+	if git -C "$REPO_ROOT" submodule status "$acore_path" 2>/dev/null | grep -q '^[-]'; then
 		acore_log_section "📦 Initializing acore-scripts submodule..."
 		git -C "$REPO_ROOT" submodule update --init "$acore_path"
 	else
@@ -37,7 +37,7 @@ sync_project_acore_scripts() {
 		git -C "$project" submodule add git@github.com:ahmet-cetinkaya/acore-scripts.git "$acore_path"
 	fi
 
-	if git -C "$project" submodule status "$acore_path" 2> /dev/null | grep -q '^[-]'; then
+	if git -C "$project" submodule status "$acore_path" 2>/dev/null | grep -q '^[-]'; then
 		acore_log_info "📦 Initializing acore-scripts in ${name}..."
 		git -C "$project" submodule update --init "$acore_path"
 	else
@@ -76,33 +76,33 @@ sync_scripts() {
 			local should_sync=false
 
 			case "$dir_name" in
-				rust)
-					if [ -f "${project}Cargo.toml" ]; then
-						should_sync=true
-					fi
-					;;
-				csharp)
-					if [ -n "$(fd -e csproj -d 4 . "$project" 2> /dev/null)" ]; then
-						should_sync=true
-					fi
-					;;
-				shell)
-					if fd -e sh -t f . "$project" &> /dev/null; then
-						should_sync=true
-					fi
-					;;
-				markdown)
-					if fd -e md -t f . "$project" &> /dev/null; then
-						should_sync=true
-					fi
-					;;
+			rust)
+				if [ -f "${project}Cargo.toml" ]; then
+					should_sync=true
+				fi
+				;;
+			csharp)
+				if [ -n "$(fd -e csproj -d 4 . "$project" 2>/dev/null)" ]; then
+					should_sync=true
+				fi
+				;;
+			shell)
+				if fd -e sh -t f . "$project" &>/dev/null; then
+					should_sync=true
+				fi
+				;;
+			markdown)
+				if fd -e md -t f . "$project" &>/dev/null; then
+					should_sync=true
+				fi
+				;;
 			esac
 
 			if [ "$should_sync" = true ]; then
-				local dest="${project_scripts}/${dir_name}"
+				local dest="${project_scripts}/helpers/${dir_name}"
 				mkdir -p "$dest"
 				cp -r "${helper_dir}/." "$dest/"
-				acore_log_success "✅ ${dir_name}/ → ${name}"
+				acore_log_success "✅ helpers/${dir_name}/ → ${name}"
 			fi
 		done
 

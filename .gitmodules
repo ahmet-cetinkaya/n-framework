@@ -10,9 +10,9 @@
 [submodule "src/core-cli-rust"]
 	path = src/core-cli-rust
 	url = git@github.com:n-framework/core-cli-rust.git
-[submodule "src/core-template-rust"]
-	path = src/core-template-rust
-	url = git@github.com:n-framework/core-template-rust.git
 [submodule "src/website"]
 	path = src/website
 	url = git@github.com:n-framework/website.git
+[submodule "src/core-template-rust"]
+	path = src/core-template-rust
+	url = git@github.com:n-framework/core-template-rust.git

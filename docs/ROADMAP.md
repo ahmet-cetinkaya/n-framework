@@ -8,7 +8,7 @@ It is intentionally narrower than the PRD:
 - It keeps the first externally consumable beta scoped to the `.NET` service path
 - It separates the beta release gate from lower-priority beta follow-on work when the PRD marks those items as important but not on the critical path
 - It keeps distributed `.NET` features, polyglot support, and ecosystem tooling behind a stable standalone `.NET` path
-- It assumes the interactive tooling layer is Rust-based so the CLI/TUI can stay fast, portable, and easy to extend
+- It assumes the CLI is Rust-based so it stays fast, portable, and easy to extend
 
 For the full product definition, see [PRD.md](./PRD.md).
 
@@ -19,10 +19,11 @@ NFramework is being developed as a compile-time-first framework and workspace st
 The current execution strategy is:
 
 - Initial delivery proves the standalone `.NET 11` reference path first
-- The first public beta must validate CLI/TUI experience, architecture enforcement, compile-time generation, and Native AOT readiness before distributed features expand the surface area
+- The first public beta must validate CLI experience, architecture enforcement, compile-time generation, and Native AOT readiness before distributed features expand the surface area
 - Distributed `.NET` microservice features follow only after the standalone `.NET` service path is stable
 - Polyglot support follows only after the `.NET` conventions, contract model, and workspace standard are durable
-- The CLI/TUI layer is planned as Rust tooling that drives the workspace and service workflows
+- The CLI layer is planned as Rust tooling that drives the workspace and service workflows
+- TUI is deferred until after the .NET framework path is fully proven (workspace, compile-time generation, core capabilities, beta, distributed features, and polyglot)
 - MCP-compatible tooling remains part of the product direction, but it should not displace the beta-critical `.NET` workflow
 
 ## Planning Assumptions
@@ -31,7 +32,7 @@ This roadmap assumes:
 
 - A core delivery team of `4` engineers through beta, expanding to `5` engineers for distributed `.NET` and polyglot phases
 - Shared support from `0.5` QA automation throughout the roadmap and `0.5` technical writing support starting in beta hardening
-- A Rust tooling engineer owns the CLI/TUI layer and keeps interactive and scripted entry points aligned
+- A Rust CLI engineer owns the CLI layer and keeps interactive and scripted entry points aligned
 - Phase boundaries are driven by the priorities in PRD sections `3`, `6`, `11`, and `12`, not by calendar convenience alone
 - When PRD sections disagree on sequencing detail, planning follows the more concrete implementation constraints in section `11`, and the dependency is called out explicitly in the relevant phase
 
@@ -66,38 +67,34 @@ These follow-on items remain part of the broader beta train because PRD section 
 Target window: April-May 2026
 
 Goal:
-Establish the Rust CLI/TUI, workspace shape, service scaffold, and interactive interface needed for every later generator and adapter investment.
+Establish the Rust CLI, workspace shape, service scaffold, template system, architecture validation, and build/test workflows needed for every later generator and adapter investment.
 
 Why this phase matters:
-This phase creates the shortest path to the PRD promise of one-command workspace setup, enforceable Clean Architecture boundaries, and a usable `.NET` baseline that later compile-time tooling can rely on while the Rust CLI/TUI provides the interactive front door.
+This phase creates the shortest path to the PRD promise of one-command workspace setup, enforceable Clean Architecture boundaries, and a usable `.NET` baseline that later compile-time tooling can rely on.
 
 Milestones:
 
 - [ ] M1: Lock workspace structure, namespace conventions, and template metadata model
-- [ ] M2: Ship the Rust `nfw` CLI/TUI, including `nfw templates`, `nfw new`, and `nfw add service --lang dotnet`
-- [ ] M3: Deliver comprehensive TUI interface for workspace and service management
+- [ ] M2: Ship the Rust `nfw` CLI (CLI-only), including `nfw templates`, `nfw new`, and `nfw add service --lang dotnet`
+- [ ] M3: Establish baseline architecture rules and `nfw check` validation
 
 Planned deliverables:
 
-- [ ] Rust CLI/TUI skeleton with deterministic command parsing and interactive screens for template selection and workspace setup
-- [ ] Template catalog, template version rules, and remote catalog support
-- [ ] Workspace creation with documented build and test commands
-- [ ] TUI flows for interactive template selection and workspace confirmation
-- [ ] TUI dashboard for workspace overview with service status and health indicators
-- [ ] TUI interactive service creation wizard with validation and real-time feedback
-- [ ] TUI command palette for quick access to all `nfw` commands
-- [ ] TUI configuration editor for workspace and service settings
-- [ ] TUI progress indicators and diagnostics for long-running operations
-- [ ] `.NET` service scaffold with `Domain`, `Application`, `Infrastructure`, and `Api` projects
+- [ ] Rust CLI skeleton with deterministic command parsing for template selection and workspace setup
+- [ ] Template catalog, template version rules, and remote catalog support (`nfw templates`)
+- [ ] Workspace creation with documented build and test commands (`nfw new`)
+- [ ] `.NET` service scaffold with `Domain`, `Application`, `Infrastructure`, and `Api` projects (`nfw add service --lang dotnet`)
 - [ ] Sample health or readiness endpoint in generated services
 - [ ] Initial layer rules, package boundaries, and forbidden dependency definitions
-- [ ] CLI smoke tests for template selection and workspace generation
-- [ ] TUI integration tests for interactive workflows
+- [ ] Architecture validation via `nfw check` for forbidden references, namespaces, and packages
+- [ ] CLI smoke tests for template selection, workspace generation, and service scaffolding (interactive and non-interactive modes)
+- [ ] Single-command build and single-command test workflows for generated samples
+- [ ] Benchmark harness validating workspace and service creation performance targets
 
 Dependencies:
 
 - [ ] Finalize generated folder, namespace, and solution conventions before source generator work begins
-- [ ] Finalize the Rust CLI command model and TUI flow before generator work begins
+- [ ] Finalize the Rust CLI command model before generator work begins
 - [ ] Define the sample workspace used by smoke tests, AOT checks, and future generator fixtures
 - [ ] Keep build and test entry points stable so later phases do not break onboarding
 
@@ -105,15 +102,16 @@ Risk mitigation:
 
 - [ ] Freeze workspace conventions at the phase boundary to avoid generator churn in later phases
 - [ ] Add smoke tests early for interactive and non-interactive command paths
-- [ ] Validate TUI usability with real developer workflows before phase exit
+- [ ] Validate CLI usability with real developer workflows before phase exit
 
 Exit criteria:
 
-- [ ] A new `.NET` workspace and service can be created from the Rust CLI/TUI
+- [ ] A new `.NET` workspace and service can be created from the Rust CLI
 - [ ] Generated projects compile without manual file edits
 - [ ] Template selection works in interactive and non-interactive flows
-- [ ] TUI provides complete interactive coverage for all Phase 1 CLI commands
+- [ ] Architecture validation detects violations with actionable remediation hints
 - [ ] The project exposes a documented single build command and single test command
+- [ ] CLI smoke tests pass for all Phase 1 command scenarios
 
 PRD traceability:
 
@@ -128,23 +126,29 @@ PRD traceability:
 Target window: June-August 2026
 
 Goal:
-Prove the compile-time-first application model by delivering the CQRS pipeline, command and query generation, and generator-backed wiring for DI and Minimal APIs.
+Prove the compile-time-first application model by delivering the CQRS pipeline, command, query, and CRUD generation, generator-backed wiring for DI and Minimal APIs, and establishing the foundational .NET core packages (`NFramework.Core.*`) containing the base abstractions and contracts.
 
 Why this phase matters:
 This phase validates the core product claim that NFramework can replace runtime reflection and repetitive wiring with deterministic generation without sacrificing developer clarity or AOT compatibility.
 
 Milestones:
 
-- [ ] M4: Ship workflow contracts, behavior pipeline, and CQRS dispatch
+- [ ] M4: Deliver foundational .NET core packages (`NFramework.Core.*`) containing base abstractions for Domain, Application, Persistence, Security, and Cross-Cutting Concerns
 - [ ] M5: Deliver source-generated DI registration and Minimal API route generation
-- [ ] M6: Deliver standalone command and query generation with architecture validation
+- [ ] M6: Deliver interactive wizard-like command, query, and CRUD generation with architecture validation, including feature folder auto-creation and all cross-cutting concern options
 
 Planned deliverables:
 
+- [ ] `NFramework.Core.Domain`, `NFramework.Core.Application`, `NFramework.Core.Persistence`, `NFramework.Core.Security`, `NFramework.Core.Mediator`, `NFramework.Core.Mapper`, and `NFramework.Core.CrossCuttingConcerns` (abstractions only)
+- [ ] Domain abstractions for `Entity<TId>`, `AggregateRoot`, `ValueObject`, and `DomainEvent`
 - [ ] Application contracts for commands, queries, events, stream requests, business rules, pageable requests, and pipeline behaviors
-- [ ] Optional workflow markers for caching, logging, transaction, and secured-operation features
+- [ ] `nfw add command`, `nfw add query`, and `nfw add entity` (CRUD) with interactive wizard-like prompts for all arguments and options
+- [ ] Support for feature folder auto-creation if the target feature doesn't exist
+- [ ] Optional workflow markers for `--caching`, `--logging`, `--transaction`, and `--secured` (SecuredOperation)
+- [ ] Support for API exposure and HTTP method selection (`--api`, `--endpoint-method`)
+- [ ] Support for targeting specific projects in the workspace (`--project`)
 - [ ] First usable CQRS dispatch pipeline for generated services
-- [ ] `nfw add command` and `nfw add query`
+- [ ] End-to-end CRUD scaffolding for generated services
 - [ ] Source-generated DI registration with deterministic output and diagnostics
 - [ ] Source-generated Minimal API route mapping with documented naming conventions
 - [ ] `nfw check` for forbidden references, namespaces, and packages
@@ -153,18 +157,10 @@ Planned deliverables:
 
 Dependencies:
 
-- [ ] Phase `1` workspace and service conventions must remain stable
+- [ ] Phase `1` workspace, service, and CLI conventions must remain stable
 - [ ] Generators and analyzers must share one metadata and naming model
-- [ ] The Rust CLI/TUI public command and screen model must be frozen before documentation and release hardening begin
+- [ ] The Rust CLI public command model must be frozen before documentation and release hardening begin
 - [ ] Sample services must exist for benchmark and integration coverage
-
-Resource estimate:
-
-- `2` framework and runtime engineers
-- `1` generator engineer
-- `1` Rust CLI/TUI and analyzer engineer
-- `0.5` QA automation support
-- Approximate effort: `40-44` engineer-weeks
 
 Risk mitigation:
 
@@ -184,37 +180,34 @@ PRD traceability:
 
 - [ ] Section `3`: goals for compile-time generation, architecture enforcement, and low-boilerplate workflows
 - [ ] Section `5`: principles for compile-time behavior and exception-free business flow
-- [ ] Section `7`: `US-004`, `US-007`, `US-008`, `US-009`, `US-019`, `US-020`
+- [ ] Section `7`: `US-003`, `US-004`, `US-007`, `US-008`, `US-009`, `US-019`, `US-020`
 - [ ] Section `8`: `FR-8` to `FR-10`, `FR-16` to `FR-20`, `FR-35`, `FR-37`
-- [ ] Section `11`: generators plus analyzers, continuous Native AOT validation, opt-in workflow behaviors, and Rust CLI/TUI implementation details
+- [ ] Section `11`: generators plus analyzers, continuous Native AOT validation, opt-in workflow behaviors, and Rust CLI implementation details
 
 ## Phase 3: Core Service Capabilities and Adapters
 
 Target window: September-December 2026
 
 Goal:
-Turn the compile-time foundation into a credible `.NET` service platform by adding repository abstractions, security capabilities, and the cross-cutting adapters required by most real services.
+Turn the compile-time foundation into a credible `.NET` service platform by delivering the cross-cutting adapters and infrastructure implementations required by most real services.
 
 Why this phase matters:
 This phase is where NFramework stops being a scaffold generator and starts behaving like an opinionated application platform that still preserves clean boundaries and replaceable infrastructure.
 
 Milestones:
 
-- [ ] M7: Ship persistence abstractions and the first EF Core adapter
-- [ ] M8: Ship security abstractions, API security wiring, and authenticator flows
-- [ ] M9: Ship CRUD generation plus validation, mapping, logging, and exception-handling integrations
+- [ ] M7: Ship persistence adapters (first EF Core adapter)
+- [ ] M8: Ship security adapters (JWT, authenticators)
+- [ ] M9: Ship cross-cutting concern adapters (Serilog, FluentValidation, Mapster, etc.)
 
 Planned deliverables:
 
-- [ ] Abstract repository contracts for CRUD, paging, dynamic filters, bulk operations, and migration hooks
 - [ ] EF Core adapter implementing repository abstractions
-- [ ] Security abstractions for JWT, refresh tokens, authorization, operation claims, and authenticators
-- [ ] Default `.NET` security wiring for secured operations and OpenAPI integration
-- [ ] Validation abstractions with a FluentValidation adapter
-- [ ] Mapping abstractions with Mapster or manual mapping support
-- [ ] Logging abstractions with a Serilog adapter
+- [ ] Default `.NET` security wiring for secured operations and OpenAPI integration (JWT, authenticator flows)
+- [ ] Validation adapters (FluentValidation)
+- [ ] Mapping adapters (Mapster or manual mapping support)
+- [ ] Logging adapters (Serilog)
 - [ ] Exception handling and Problem Details integration for the HTTP stack
-- [ ] End-to-end CRUD scaffolding for generated services
 - [ ] Integration tests for persistence, security, and generated API flows
 
 Dependencies:
@@ -385,9 +378,66 @@ PRD traceability:
 - [ ] Section `8`: `FR-38`, `FR-39`, `FR-40`
 - [ ] Section `11`: Dapr and Aspire local dependency automation
 
-## Phase 6: Polyglot Standards and Ecosystem Tooling
+## Phase 6: Interactive TUI Interface
 
-Target window: August 2027-January 2028
+Target window: August-November 2027 (after all .NET expansion phases are stable)
+
+Goal:
+Deliver an interactive TUI layer on top of the stable Rust CLI to provide visual workspace management, guided wizards, and real-time feedback for common workflows.
+
+Why this phase matters:
+TUI lowers the barrier for teams who prefer guided, visual workflows over CLI-only interaction. By deferring TUI until after the entire .NET framework path — workspace scaffolding, compile-time generation, core service capabilities, beta hardening, and distributed features — is proven, the TUI can wrap a stable, production-ready foundation rather than chasing a moving target.
+
+Milestones:
+
+- [ ] M16: Ship TUI architecture, component library, and navigation model
+- [ ] M17: Ship interactive workspace dashboard and service creation wizard
+- [ ] M18: Ship command palette, configuration editor, and progress diagnostics
+
+Planned deliverables:
+
+- [ ] TUI component library with dashboard layout, form wizards, and real-time validation feedback
+- [ ] Workspace dashboard showing service status, health indicators, recent operations, and quick-action shortcuts
+- [ ] Interactive service creation wizard with step-by-step guidance, template preview, and configuration options
+- [ ] Command palette with fuzzy search, command history, keyboard shortcuts, and contextual help
+- [ ] Configuration editor for workspace and service settings with syntax highlighting and validation
+- [ ] Progress indicators, spinners, and diagnostic panels for long-running operations
+
+Dependencies:
+
+- [ ] All core CLI commands (`nfw templates`, `nfw new`, `nfw add service`, `nfw check`, etc.) must have stable, documented behavior contracts
+- [ ] Workspace conventions, template system, and service scaffolding must be proven in production use
+- [ ] The .NET framework beta must be stable with distributed features (Phase 5) fully validated
+- [ ] TUI implementation should follow the stable CLI patterns established in Phase 1-5
+
+Resource estimate:
+
+- `1` Rust CLI/TUI engineer
+- `1` framework engineer
+- `0.5` QA automation support
+- Approximate effort: `20-24` engineer-weeks
+
+Risk mitigation:
+
+- [ ] TUI wraps existing CLI commands; no duplicate business logic
+- [ ] All TUI workflows remain available through the CLI for CI and scripting use cases
+- [ ] Treat TUI as an optional layer; CLI remains the primary interface
+
+Exit criteria:
+
+- [ ] TUI can create a workspace, scaffold a service, and run architecture validation through guided workflows
+- [ ] All TUI actions produce identical results to their CLI equivalents
+- [ ] TUI runs on supported terminal platforms without rendering issues
+
+PRD traceability:
+
+- [ ] Section `3`: goals for CLI-driven workflow (CLI remains primary; TUI is complementary)
+- [ ] Section `7`: `US-001`, `US-002` (interactive prompting paths)
+- [ ] Section `8`: `FR-1`, `FR-5` (interactive and non-interactive workflows)
+
+## Phase 7: Polyglot Standards and Ecosystem Tooling
+
+Target window: December 2027-May 2028
 
 Goal:
 Extend the workspace standard beyond `.NET`, add contract sync, and make the CLI and workspace model consumable by later MCP-compatible tooling.
@@ -397,9 +447,9 @@ This phase delivers the long-term product vision of one architectural standard a
 
 Milestones:
 
-- [ ] M16: Ship Go and Rust service scaffolds using the shared workspace model
-- [ ] M17: Ship Protobuf-driven contract sync across supported languages
-- [ ] M18: Publish workspace metadata and automation surfaces required for MCP-compatible tooling
+- [ ] M19: Ship Go and Rust service scaffolds using the shared workspace model
+- [ ] M20: Ship Protobuf-driven contract sync across supported languages
+- [ ] M21: Publish workspace metadata and automation surfaces required for MCP-compatible tooling
 
 Planned deliverables:
 
@@ -469,7 +519,7 @@ The roadmap still depends on a small number of product-level decisions or clarif
 
 - [ ] Resolve the command contract for CRUD generation between PRD section `7` (`US-003`) and section `11`
 - [ ] Confirm whether localization, translation, mailing, and search ship in the first public beta or in beta follow-on releases within the same beta train
-- [ ] Align the PRD technical consideration for CLI implementation language with the Rust CLI/TUI roadmap decision
+- [ ] Align the PRD technical consideration for CLI implementation language with the Rust CLI roadmap decision
 - [ ] Lock the benchmark environment used for startup and generation KPI sign-off
 - [ ] Define the minimum stable surface required before MCP-compatible tooling work begins
 

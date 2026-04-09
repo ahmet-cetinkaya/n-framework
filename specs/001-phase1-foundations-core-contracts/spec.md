@@ -2,7 +2,7 @@
 
 ## Overview
 
-This specification defines the orchestration work required to establish the foundational workspace model, CLI/TUI entry point, and core package boundaries for NFramework. This phase creates the shortest path to one-command workspace setup, enforceable Clean Architecture boundaries, and a usable .NET baseline that later compile-time tooling can rely on.
+This specification defines the orchestration work required to establish the foundational workspace model, CLI entry point, and core scaffolding for NFramework. This phase creates the shortest path to one-command workspace setup, enforceable Clean Architecture boundaries, and a usable .NET baseline that later compile-time tooling can rely on.
 
 ## User Scenarios & Testing
 
@@ -40,41 +40,7 @@ As a .NET developer, I want to generate a service scaffold with Clean Architectu
 
 ---
 
-### User Story 3 - Use Core Domain Abstractions (Priority: P2)
-
-As a domain developer, I want standard base abstractions so that aggregates and value objects are modeled consistently across services.
-
-**Why this priority**: Domain consistency is critical for long-term maintainability, but basic CRUD can be done without these abstractions using manual code.
-
-**Independent Test**: Can be fully tested by creating an entity that inherits from framework base classes and verifying identity, equality, and domain event behavior work correctly. Delivers value: reusable domain patterns that reduce boilerplate.
-
-**Acceptance Scenarios**:
-
-1. **Given** the NFramework.Domain package, **When** I create an entity inheriting from `Entity<TId>`, **Then** identity and equality are handled correctly
-2. **Given** an aggregate root, **When** I raise a domain event, **Then** the event is captured and can be retrieved
-3. **Given** a value object, **When** I compare two instances with the same values, **Then** they are considered equal
-4. **Given** domain abstractions, **When** I inspect their dependencies, **Then** they do not depend on infrastructure packages
-
----
-
-### User Story 4 - Use Explicit Application Results (Priority: P2)
-
-As an application developer, I want handlers to return explicit result objects so that business outcomes are predictable and AOT-friendly.
-
-**Why this priority**: Explicit results enable AOT compilation and predictable business flow, but basic exception-based flow can work temporarily.
-
-**Independent Test**: Can be fully tested by creating a handler that returns `Result<T>` and verifying success, validation failure, and business failure paths work correctly. Delivers value: AOT-friendly application flow without exceptions for business logic.
-
-**Acceptance Scenarios**:
-
-1. **Given** the NFramework.Application package, **When** I create a handler that returns `Result<T>`, **Then** success and failure states can be represented without throwing exceptions
-2. **Given** a failed result, **When** I inspect the error, **Then** it contains actionable failure information
-3. **Given** validation failures, **When** they occur in business logic, **Then** they are represented as failed results rather than exceptions
-4. **Given** application abstractions, **When** I inspect their dependencies, **Then** they do not depend on infrastructure packages
-
----
-
-### User Story 5 - Validate Architecture Boundaries (Priority: P2)
+### User Story 3 - Validate Architecture Boundaries (Priority: P2)
 
 As a tech lead, I want an automated architecture audit so that boundary violations are detected before they reach production.
 
@@ -91,7 +57,7 @@ As a tech lead, I want an automated architecture audit so that boundary violatio
 
 ---
 
-### User Story 6 - List Available Templates (Priority: P3)
+### User Story 4 - List Available Templates (Priority: P3)
 
 As a developer, I want to see available starter templates so that I can choose an appropriate starting point for my workspace.
 
@@ -146,46 +112,34 @@ As a developer, I want to see available starter templates so that I can choose a
 - **FR-014**: The system MUST include at least one default template for standalone .NET service workspace creation
 - **FR-015**: The system MUST support adding custom templates via git repository URLs
 
-#### Core Domain Abstractions
-
-- **FR-016**: The system MUST provide base abstractions for `Entity<TId>`, `AggregateRoot`, `ValueObject`, and `DomainEvent`
-- **FR-017**: The system MUST ensure domain abstractions do not depend on infrastructure packages
-- **FR-018**: The system MUST provide unit tests for domain abstractions covering equality, identity, and basic domain event behavior
-
-#### Core Application Abstractions
-
-- **FR-019**: The system MUST provide `Result` and `Result<T>` types for explicit outcome representation
-- **FR-020**: The system MUST ensure application abstractions do not depend on infrastructure packages
-- **FR-021**: The system MUST provide unit tests for result types covering success, validation failure, and business failure outcomes
-
 #### Architecture Validation
 
-- **FR-022**: The system MUST support `nfw check` to scan workspace for forbidden project references and forbidden namespace or package usage using hardcoded framework-defined architecture rules
-- **FR-023**: The system MUST exit with non-zero status when architecture violations are found
-- **FR-024**: The system MUST identify violating project, file, or dependency with concrete remediation hints
-- **FR-025**: The system MUST support execution in CI without requiring interactive input
+- **FR-016**: The system MUST support `nfw check` to scan workspace for forbidden project references and forbidden namespace or package usage using hardcoded framework-defined architecture rules
+- **FR-017**: The system MUST exit with non-zero status when architecture violations are found
+- **FR-018**: The system MUST identify violating project, file, or dependency with concrete remediation hints
+- **FR-019**: The system MUST support execution in CI without requiring interactive input
 
 Architecture rules enforced include: Layer dependency rules (Domain→no Infra/Api, Application→no Infra/Api), namespace/package restrictions (Domain/Application→no EF Core, Dapr, HTTP frameworks, or infrastructure packages), and structural requirements (all services must have exactly 4 layers as separate projects)
 
 #### CLI Behavior
 
-- **FR-026**: The system MUST provide actionable error messages for invalid input, unsupported languages, and invalid option combinations
-- **FR-027**: The system MUST handle Ctrl+C gracefully by cleaning up in-progress files (delete any partially created files/directories) and exiting with code 130 on Unix-like systems
-- **FR-028**: The system MUST fail with clear errors when run outside appropriate context (e.g., service creation outside workspace)
+- **FR-020**: The system MUST provide actionable error messages for invalid input, unsupported languages, and invalid option combinations
+- **FR-021**: The system MUST handle Ctrl+C gracefully by cleaning up in-progress files (delete any partially created files/directories) and exiting with code 130 on Unix-like systems
+- **FR-022**: The system MUST fail with clear errors when run outside appropriate context (e.g., service creation outside workspace)
 
 #### Testing Infrastructure
 
-- **FR-029**: The system MUST provide CLI smoke tests that validate template selection and workspace generation
-- **FR-030**: The system MUST provide architecture validation tests that prove detection of valid and invalid cases
-- **FR-031**: The system MUST support single-command build and single-command test workflows for generated samples
+- **FR-023**: The system MUST provide CLI smoke tests that validate template selection and workspace generation
+- **FR-024**: The system MUST provide architecture validation tests that prove detection of valid and invalid cases
+- **FR-025**: The system MUST support single-command build and single-command test workflows for generated samples
 
 ### Key Entities
 
 - **Workspace**: Root container for services, identified by presence of `nfw.yaml` (YAML format) at workspace root, containing configuration files, solution structure, and shared settings
 - **Service**: A deployable unit with four layers (Domain, Application, Infrastructure, Api) following Clean Architecture
 - **Template**: A workspace starter definition stored as a git repository containing metadata, file templates, and default configuration
-- **Entity**: Domain object with identity, inheriting from framework base abstractions
-- **Result**: Explicit outcome type representing success or failure with actionable error information
+- **Entity**: Domain object with identity, inheriting from framework base abstractions (deferred to Phase 2)
+- **Result**: Explicit outcome type representing success or failure with actionable error information (deferred to Phase 2)
 
 ## Success Criteria
 
@@ -194,17 +148,15 @@ Architecture rules enforced include: Layer dependency rules (Domain→no Infra/A
 - **SC-001**: A new .NET workspace and service can be created from the CLI in less than 1 second on baseline developer hardware (2 CPU cores, 4GB RAM)
 - **SC-002**: Generated projects compile without manual file edits 100% of the time
 - **SC-003**: Template selection works in both interactive and non-interactive flows with 100% success rate
-- **SC-004**: Core domain abstractions are usable without infrastructure dependencies (verified by dependency analysis)
-- **SC-005**: The workspace provides a documented single build command and single test command that succeed on first run
-- **SC-006**: Architecture validation detects all documented violation types with zero false positives in test fixtures
-- **SC-007**: CLI smoke tests pass for template selection and workspace generation scenarios
+- **SC-004**: The workspace provides a documented single build command and single test command that succeed on first run
+- **SC-005**: Architecture validation detects all documented violation types with zero false positives in test fixtures
+- **SC-006**: CLI smoke tests pass for template selection and workspace generation scenarios
 
 ## Assumptions
 
 - The workspace structure, namespace conventions, and folder organization defined in this phase will remain stable through all subsequent phases
-- The Rust CLI/TUI implementation provides the interactive and scripted entry points for all workspace and service operations
+- The Rust CLI implementation provides the primary entry point for all workspace and service operations
 - Module repositories for `nfw` CLI and core framework packages will be implemented as separate git submodules
-- Core framework packages (Domain, Application, etc.) will be created as needed based on framework requirements
 - Generated .NET services target .NET 11 as the baseline runtime
 - Templates are distributed as git repositories that can be cloned to a local cache
 - Template repositories contain metadata describing the template (name, description, supported features) in a standard format
@@ -213,10 +165,9 @@ Architecture rules enforced include: Layer dependency rules (Domain→no Infra/A
 
 ## Dependencies
 
-- **Submodule structure**: Git submodules for `src/nfw` and core framework packages must be created and initialized as needed
+- **Submodule structure**: Git submodules for `src/nfw` must be created and initialized as needed
 - **PRD Section 11**: Technical considerations for workspace conventions, CLI implementation language, and baseline structure
-- **ROADMAP Phase 2**: Source generator work depends on stable workspace and service conventions from this phase
-- **ROADMAP Phase 3**: Adapter work depends on stable domain and application abstractions from this phase
+- **ROADMAP Phase 2**: Source generator and core abstraction work depends on stable workspace and service conventions from this phase
 
 ## Clarifications
 
@@ -234,6 +185,7 @@ Architecture rules enforced include: Layer dependency rules (Domain→no Infra/A
 
 ## Non-Goals
 
+- Establishing `NFramework.Domain` and `NFramework.Application` package contents (deferred to Phase 2)
 - Supporting ASP.NET MVC or controller-based scaffolding
 - Providing runtime reflection fallbacks for framework features
 - Supporting every database, queue, or cloud provider in the first release
@@ -244,31 +196,27 @@ Architecture rules enforced include: Layer dependency rules (Domain→no Infra/A
 - MCP-compatible tooling integrations
 - Source-generated DI registration or route generation (deferred to Phase 2)
 - Command, query, or CRUD generation (deferred to Phase 2/3)
+- Interactive TUI interface (deferred to post-beta)
 
 ## Downstream Specifications Required
 
 The following project-level specifications must be created in module repositories to implement this orchestrator spec:
 
-1. **nfw CLI/TUI Specification** (`src/nfw/specs/`):
-   - Command parsing and routing
-   - Interactive and non-interactive workflows
+1. **nfw CLI Specification** (`src/nfw/specs/`):
+   - Command parsing and routing (CLI-only)
+   - Non-interactive and interactive prompting workflows
    - Template catalog management
    - Workspace creation orchestration
    - Service generation orchestration
    - Architecture validation
 
-2. **Core Framework Packages** (created as needed):
-   - Domain abstractions (`Entity<TId>`, AggregateRoot, ValueObject, DomainEvent)
-   - Application abstractions (Result types, CQRS contracts, validation)
-   - Specific package structure and naming to be determined during implementation
-
-3. **Template Metadata Specification** (`src/nfw/specs/` or separate template repo):
+2. **Template Metadata Specification** (`src/nfw/specs/` or separate template repo):
    - Template schema and structure
    - Template catalog format
    - Remote template discovery
    - Template versioning rules
 
-4. **Workspace Conventions Specification** (root `specs/` or as part of nfw CLI spec):
+3. **Workspace Conventions Specification** (root `specs/` or as part of nfw CLI spec):
    - Folder structure definition
    - Namespace conventions
    - Solution file organization

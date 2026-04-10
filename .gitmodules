@@ -16,3 +16,6 @@
 [submodule "src/core-template-rust"]
 	path = src/core-template-rust
 	url = git@github.com:n-framework/core-template-rust.git
+[submodule "src/core-mediator-dotnet"]
+	path = src/core-mediator-dotnet
+	url = git@github.com:n-framework/core-mediator-dotnet.git

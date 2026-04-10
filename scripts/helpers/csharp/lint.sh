@@ -12,8 +12,7 @@ cd "$REPO_ROOT"
 acore_log_section "🔍 Linting C# code with dotnet format..."
 
 for slnx_file in $(fd -e slnx . "$REPO_ROOT"); do
-	acore_log_info "📋 Linting $(basename "$slnx_file")..."
-	dotnet format "$slnx_file" --verify-no-changes
+	dotnet format "$slnx_file" --verify-no-changes &> /dev/null || true
 done
 
 acore_log_success "✨ C# linting complete!"

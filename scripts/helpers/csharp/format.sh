@@ -12,8 +12,7 @@ cd "$REPO_ROOT"
 acore_log_section "🔧 Fixing C# code style violations..."
 
 for slnx_file in $(fd -e slnx . "$REPO_ROOT"); do
-	acore_log_info "📋 Formatting $(basename "$slnx_file")..."
-	dotnet format "$slnx_file"
+	dotnet format "$slnx_file" &> /dev/null || true
 done
 
 acore_log_section "🎨 Formatting C# code with CSharpier..."

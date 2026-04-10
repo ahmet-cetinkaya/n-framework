@@ -131,34 +131,32 @@ PRD traceability:
 Target window: June-August 2026
 
 Goal:
-Prove the compile-time-first application model by delivering the CQRS pipeline, command, query, and CRUD generation, generator-backed wiring for DI and Minimal APIs, and establishing the foundational .NET core packages (`NFramework.Core.*`) containing the base abstractions and contracts.
+Prove the compile-time-first application model by delivering the CQRS pipeline, command, query, and CRUD generation, source-generated DI registration, and establishing the foundational .NET topic packages containing the base abstractions and contracts.
 
 Why this phase matters:
 This phase validates the core product claim that NFramework can replace runtime reflection and repetitive wiring with deterministic generation without sacrificing developer clarity or AOT compatibility.
 
 Milestones:
 
-- [ ] M4: Deliver foundational .NET core packages (`NFramework.Core.*`) containing base abstractions for Domain, Application, Persistence, Security, and Cross-Cutting Concerns
-- [ ] M5: Deliver source-generated DI registration and Minimal API route generation
-- [ ] M6: Deliver interactive wizard-like command, query, and CRUD generation with architecture validation, including feature folder auto-creation and all cross-cutting concern options
+- [ ] M4: Deliver foundational .NET topic packages (`NFramework.Persistence.*`, `NFramework.Mediator.*`) containing base abstractions and EF Core/MediatR implementations
+- [ ] M5: Deliver source-generated DI registration for repositories and handlers
+- [ ] M6: Deliver interactive wizard-like command, query, and CRUD generation with mustache templates and configuration-driven flow
 
 Planned deliverables:
 
-- [ ] `NFramework.Core.Domain`, `NFramework.Core.Application`, `NFramework.Core.Persistence`, `NFramework.Core.Security`, `NFramework.Core.Mediator`, `NFramework.Core.Mapper`, and `NFramework.Core.CrossCuttingConcerns` (abstractions only)
-- [ ] Domain abstractions for `Entity<TId>`, `AggregateRoot`, `ValueObject`, and `DomainEvent`
-- [ ] Application contracts for commands, queries, events, stream requests, business rules, pageable requests, and pipeline behaviors
-- [ ] `nfw add command`, `nfw add query`, and `nfw add entity` (CRUD) with interactive wizard-like prompts for all arguments and options
-- [ ] Support for feature folder auto-creation if the target feature doesn't exist
-- [ ] Optional workflow markers for `--caching`, `--logging`, `--transaction`, and `--secured` (SecuredOperation)
-- [ ] Support for API exposure and HTTP method selection (`--api`, `--endpoint-method`)
-- [ ] Support for targeting specific projects in the workspace (`--project`)
-- [ ] First usable CQRS dispatch pipeline for generated services
-- [ ] End-to-end CRUD scaffolding for generated services
-- [ ] Source-generated DI registration with deterministic output and diagnostics
-- [ ] Source-generated Minimal API route mapping with documented naming conventions
-- [ ] `nfw check` for forbidden references, namespaces, and packages
-- [ ] Build fixtures for empty and non-empty generator scenarios
-- [ ] AOT and trimming checks integrated into CI for generated samples
+- [ ] `NFramework.Persistence.Abstractions`, `NFramework.Persistence.EFCore`, and `NFramework.Persistence.Generators` packages
+- [ ] `NFramework.Mediator.Abstractions`, `NFramework.Mediator.Mediator` (adapter for martinothamar/Mediator), and `NFramework.Mediator.Generators` packages
+- [ ] Repository abstractions (IRepository<T, TId>, IUnitOfWork), entity base classes, and pagination interfaces
+- [ ] CQRS abstractions (ICommand<TResult>, IQuery<TResult>, IRequestHandler<TRequest, TResult>, IPipelineBehavior<TRequest, TResult>)
+- [ ] `nfw gen command <NAME> <FEATURE>`, `nfw gen query <NAME> <FEATURE>`, and `nfw gen crud <NAME> --props <DEFINITIONS>` with interactive prompts
+- [ ] Support for `--no-input` flag and `--project` parameter for non-interactive mode
+- [ ] Feature folder auto-creation following NFramework conventions
+- [ ] Mustache templates and configurations in `src/nfw-templates/` submodule for scaffolding
+- [ ] Configuration-driven generation flow (no hardcoded logic in nfw)
+- [ ] Source-generated DI registration code with incremental Roslyn generators
+- [ ] Generated code is trimmable and AOT-compatible (zero warnings)
+- [ ] `nfw check` command for architecture validation (forbidden dependencies, namespace violations, banned packages)
+- [ ] Golden-file tests for generated code and AOT build validation
 
 Dependencies:
 
@@ -189,31 +187,36 @@ PRD traceability:
 - [ ] Section `8`: `FR-8` to `FR-10`, `FR-16` to `FR-20`, `FR-35`, `FR-37`
 - [ ] Section `11`: generators plus analyzers, continuous Native AOT validation, opt-in workflow behaviors, and Rust CLI implementation details
 
-## Phase 3: Core Service Capabilities and Adapters
+## Phase 3: Cross-Cutting Concerns and API Routing
 
 Target window: September-December 2026
 
 Goal:
-Turn the compile-time foundation into a credible `.NET` service platform by delivering the cross-cutting adapters and infrastructure implementations required by most real services.
+Expand the compile-time foundation with cross-cutting concern abstractions, API routing source generators, and infrastructure implementations required by most real services.
 
 Why this phase matters:
-This phase is where NFramework stops being a scaffold generator and starts behaving like an opinionated application platform that still preserves clean boundaries and replaceable infrastructure.
+This phase delivers the essential cross-cutting building blocks (Result<T>, validators, mappers, cache, logging) and API routing automation that make NFramework a complete application platform while preserving clean boundaries.
 
 Milestones:
 
-- [ ] M7: Ship persistence adapters (first EF Core adapter)
-- [ ] M8: Ship security adapters (JWT, authenticators)
-- [ ] M9: Ship cross-cutting concern adapters (Serilog, FluentValidation, Mapster, etc.)
+- [ ] M7: Ship cross-cutting concern abstractions and adapters (Result<T>, validators, mappers, cache, logging)
+- [ ] M8: Ship source-generated Minimal API route generation with documented naming conventions
+- [ ] M9: Deliver integration tests for cross-cutting concerns and API routing
 
 Planned deliverables:
 
-- [ ] EF Core adapter implementing repository abstractions
-- [ ] Default `.NET` security wiring for secured operations and OpenAPI integration (JWT, authenticator flows)
-- [ ] Validation adapters (FluentValidation)
-- [ ] Mapping adapters (Mapster or manual mapping support)
-- [ ] Logging adapters (Serilog)
+- [ ] `NFramework.CrossCuttingConcerns.Abstractions` and `NFramework.CrossCuttingConcerns.*` adapter packages
+- [ ] Result<T> type for explicit error handling without exceptions
+- [ ] Validation abstractions and FluentValidation adapters
+- [ ] Mapping abstractions and Mapster adapters
+- [ ] Caching abstractions and IMemoryCache/IDistributedCache adapters
+- [ ] Logging abstractions and Serilog/ILogger adapters
 - [ ] Exception handling and Problem Details integration for the HTTP stack
-- [ ] Integration tests for persistence, security, and generated API flows
+- [ ] Source-generated Minimal API route mapping using incremental Roslyn generators
+- [ ] API route discovery from command/query handlers with attribute-based or convention-based configuration
+- [ ] OpenAPI/Swagger integration for generated endpoints
+- [ ] Golden-file tests for generated route mappings
+- [ ] Integration tests for cross-cutting concerns and API flows
 
 Dependencies:
 
@@ -254,9 +257,144 @@ PRD traceability:
 - [ ] Section `8`: `FR-7`, `FR-21` to `FR-34`
 - [ ] Section `11`: first-class beta abstractions and first-party adapter priorities
 
-## Phase 4: Beta Hardening and Public Beta
+## Phase 4: Security Abstractions and Implementations
 
 Target window: January-March 2027
+
+Goal:
+Deliver security abstractions and first-party implementations (authentication, authorization, encryption) for securing NFramework services.
+
+Why this phase matters:
+This phase provides the security building blocks required for production services while maintaining clean architecture boundaries and keeping security concerns out of domain and application layers.
+
+Milestones:
+
+- [ ] M10: Ship security abstractions (IUser, IIdentity, claims, permissions)
+- [ ] M11: Ship authentication and authorization adapters (JWT, API keys)
+- [ ] M12: Ship encryption and secret management adapters
+
+Planned deliverables:
+
+- [ ] `NFramework.Security.Abstractions`, `NFramework.Security.*` adapter packages
+- [ ] Security abstractions for users, identities, claims, permissions, and roles
+- [ ] Attribute-based authorization (`[RequiresPermission]`, `[RequiresRole]`)
+- [ ] JWT authentication adapter with token generation and validation
+- [ ] API key authentication adapter
+- [ ] Authorization handlers for permission and role-based access control
+- [ ] Encryption adapters for data at rest (symmetric/asymmetric)
+- [ ] Secret management adapters for environment variables and key vault integration
+- [ ] Security pipeline behaviors for CQRS commands and queries
+- [ ] Integration tests for authentication, authorization, and encryption flows
+
+Dependencies:
+
+- [ ] Phase `2` CQRS abstractions must be stable
+- [ ] Phase `3` cross-cutting concerns (Result<T>) must be available for error handling
+- [ ] Phase `3` API routing generators must support secured endpoints
+
+Resource estimate:
+
+- `2` security engineers
+- `1` framework engineer
+- `0.5` QA automation support
+- Approximate effort: `30-35` engineer-weeks
+
+Risk mitigation:
+
+- [ ] Keep security types out of domain and application layers
+- [ ] Use adapter pattern for multiple authentication providers
+- [ ] Security audit before public beta release
+- [ ] Document security assumptions and threat model
+
+Exit criteria:
+
+- [ ] Generated services can secure operations with attributes and behaviors
+- [ ] Authentication and authorization work without runtime reflection
+- [ ] Security adapters are replaceable without modifying domain/application code
+- [ ] Integration tests validate end-to-end security workflows
+
+PRD traceability:
+
+- [ ] Section `3`: goals for security-first design
+- [ ] Section `5`: principles for security as a cross-cutting adapter
+- [ ] Section `7`: user stories for secured operations
+- [ ] Section `8`: functional requirements for authentication and authorization
+
+## Phase 5: Diagnostic Analyzers
+
+Target window: April-June 2027
+
+Goal:
+Deliver Roslyn diagnostic analyzers for AOT compatibility checking, architecture validation, and compile-time enforcement of NFramework conventions.
+
+Why this phase matters:
+This phase provides developer-friendly compile-time diagnostics that catch architecture violations, AOT incompatibilities, and framework usage errors before runtime, improving developer experience and reducing debugging time.
+
+Milestones:
+
+- [ ] M13: Ship AOT compatibility analyzer with diagnostics for reflection, dynamic types, and unsupported patterns
+- [ ] M14: Ship architecture validation analyzer for layer violations and forbidden dependencies
+- [ ] M15: Ship framework usage analyzer for NFramework-specific patterns and conventions
+
+Planned deliverables:
+
+- [ ] `NFramework.Analyzers` NuGet package with multiple diagnostic analyzers
+- [ ] AOT compatibility analyzer detecting:
+  - [ ] Runtime reflection usage (GetType(), GetMethods(), etc.)
+  - [ ] Dynamic type usage (dynamic, ExpandoObject)
+  - [ ] Activator.CreateInstance and other instantiation patterns
+  - [ ] Serialization attributes incompatible with AOT
+- [ ] Architecture validation analyzer detecting:
+  - [ ] Domain layer dependencies on Infrastructure
+  - [ ] Application layer dependencies on presentation/frameworks
+  - [ ] Direct HTTP/database access from Domain or Application
+  - [ ] Forbidden namespace references
+- [ ] Framework usage analyzer for:
+  - [ ] Missing handler registrations
+  - [ ] Improper command/query naming conventions
+  - [ ] Missing repository interface implementations
+  - [ ] Incorrect attribute usage
+- [ ] Configurable diagnostic severities (error, warning, info)
+- [ ] Code fixes and refactoring suggestions for common violations
+- [ ] Integration with `nfw check` CLI command
+- [ ] Unit tests for analyzer diagnostics and code fixes
+
+Dependencies:
+
+- [ ] Phase `2` compile-time application model must be stable
+- [ ] Phase `3` cross-cutting concerns and API routing must be defined
+- [ ] Phase `4` security abstractions must be finalized
+
+Resource estimate:
+
+- `1-2` analyzer engineers
+- `0.5` QA automation support
+- Approximate effort: `20-25` engineer-weeks
+
+Risk mitigation:
+
+- [ ] Start with high-impact diagnostics that prevent real issues
+- [ ] Make diagnostics opt-out via configuration for legacy codebases
+- [ ] Provide clear documentation and error messages
+- [ ] Treat analyzer warnings as errors in CI for new projects
+
+Exit criteria:
+
+- [ ] Analyzers detect common AOT incompatibilities with actionable error messages
+- [ ] Architecture violations are caught at compile-time with file/line locations
+- [ ] Developers can opt-in to analyzer package via single NuGet reference
+- [ ] Analyzer diagnostics integrate with Visual Studio and VS Code
+
+PRD traceability:
+
+- [ ] Section `3`: goals for compile-time enforcement and architecture validation
+- [ ] Section `5`: principles for fail-fast validation
+- [ ] Section `8`: functional requirements for architecture checking
+- [ ] Section `11`: analyzer and validation tooling
+
+## Phase 6: Beta Hardening and Public Beta
+
+Target window: July-September 2027
 
 Goal:
 Close the beta gate with documentation, KPI validation, release hardening, and a clear separation between beta-critical scope and beta-train follow-on items.
@@ -266,9 +404,9 @@ This phase converts engineering completeness into product readiness by proving t
 
 Milestones:
 
-- [ ] M10: Publish quickstart, architecture guidance, and troubleshooting
-- [ ] M11: Lock benchmark harness and pass AOT, startup, and generation KPIs
-- [ ] M12: Cut the first public beta and schedule beta follow-on packages
+- [ ] M16: Publish quickstart, architecture guidance, and troubleshooting
+- [ ] M17: Lock benchmark harness and pass AOT, startup, and generation KPIs
+- [ ] M18: Cut the first public beta and schedule beta follow-on packages
 
 Planned deliverables:
 
@@ -319,7 +457,7 @@ PRD traceability:
 - [ ] Section `11`: continuous Native AOT validation and documented local setup defaults
 - [ ] Section `12`: all beta gate success metrics except polyglot metrics
 
-## Phase 5: Distributed `.NET` Expansion
+## Phase 7: Distributed `.NET` Expansion
 
 Target window: April-July 2027
 
@@ -331,9 +469,9 @@ This phase fulfills the PRD promise that cloud-native defaults become part of th
 
 Milestones:
 
-- [ ] M13: Ship Aspire AppHost and ServiceDefaults generation
-- [ ] M14: Ship first-party Dapr adapters for state, pub/sub, and secret workflows
-- [ ] M15: Ship `nfw up` and distributed `.NET` guidance
+- [ ] M19: Ship Aspire AppHost and ServiceDefaults generation
+- [ ] M20: Ship first-party Dapr adapters for state, pub/sub, and secret workflows
+- [ ] M21: Ship `nfw up` and distributed `.NET` guidance
 
 Planned deliverables:
 
@@ -383,9 +521,9 @@ PRD traceability:
 - [ ] Section `8`: `FR-38`, `FR-39`, `FR-40`
 - [ ] Section `11`: Dapr and Aspire local dependency automation
 
-## Phase 6: Interactive TUI Interface
+## Phase 8: Interactive TUI Interface
 
-Target window: August-November 2027 (after all .NET expansion phases are stable)
+Target window: October 2027-January 2028 (after all .NET expansion phases are stable)
 
 Goal:
 Deliver an interactive TUI layer on top of the stable Rust CLI to provide visual workspace management, guided wizards, and real-time feedback for common workflows.
@@ -395,9 +533,9 @@ TUI lowers the barrier for teams who prefer guided, visual workflows over CLI-on
 
 Milestones:
 
-- [ ] M16: Ship TUI architecture, component library, and navigation model
-- [ ] M17: Ship interactive workspace dashboard and service creation wizard
-- [ ] M18: Ship command palette, configuration editor, and progress diagnostics
+- [ ] M22: Ship TUI architecture, component library, and navigation model
+- [ ] M23: Ship interactive workspace dashboard and service creation wizard
+- [ ] M24: Ship command palette, configuration editor, and progress diagnostics
 
 Planned deliverables:
 
@@ -412,8 +550,8 @@ Dependencies:
 
 - [ ] All core CLI commands (`nfw templates`, `nfw new`, `nfw add service`, `nfw check`, etc.) must have stable, documented behavior contracts
 - [ ] Workspace conventions, template system, and service scaffolding must be proven in production use
-- [ ] The .NET framework beta must be stable with distributed features (Phase 5) fully validated
-- [ ] TUI implementation should follow the stable CLI patterns established in Phase 1-5
+- [ ] The .NET framework beta must be stable with distributed features (Phase 7) fully validated
+- [ ] TUI implementation should follow the stable CLI patterns established in Phase 1-7
 
 Resource estimate:
 
@@ -440,9 +578,9 @@ PRD traceability:
 - [ ] Section `7`: `US-001`, `US-002` (interactive prompting paths)
 - [ ] Section `8`: `FR-1`, `FR-5` (interactive and non-interactive workflows)
 
-## Phase 7: Polyglot Standards and Ecosystem Tooling
+## Phase 9: Polyglot Standards and Ecosystem Tooling
 
-Target window: December 2027-May 2028
+Target window: February-July 2028
 
 Goal:
 Extend the workspace standard beyond `.NET`, add contract sync, and make the CLI and workspace model consumable by later MCP-compatible tooling.
@@ -452,9 +590,9 @@ This phase delivers the long-term product vision of one architectural standard a
 
 Milestones:
 
-- [ ] M19: Ship Go and Rust service scaffolds using the shared workspace model
-- [ ] M20: Ship Protobuf-driven contract sync across supported languages
-- [ ] M21: Publish workspace metadata and automation surfaces required for MCP-compatible tooling
+- [ ] M25: Ship Go and Rust service scaffolds using the shared workspace model
+- [ ] M26: Ship Protobuf-driven contract sync across supported languages
+- [ ] M27: Publish workspace metadata and automation surfaces required for MCP-compatible tooling
 
 Planned deliverables:
 

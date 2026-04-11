@@ -13,9 +13,16 @@ acore_log_info "Running lint for all projects..."
 
 for helper_lint in "${SCRIPT_DIR}/helpers"/*/lint.sh; do
 	[ -f "$helper_lint" ] || continue
-	helper_name=$(basename "$(dirname "$helper_lint")")
-	acore_log_section "$helper_name"
 	bash "$helper_lint"
 done
 
-acore_log_success "✨ Linting complete!"
+for project_lint in "${REPO_ROOT}"/src/*/scripts/lint.sh; do
+	[ -f "$project_lint" ] || continue
+	project_name="$(basename "$(dirname "$(dirname "$project_lint")")")"
+	acore_log_divider
+	acore_log_info "▶️ Running lint in src/$project_name..."
+	bash "$project_lint"
+done
+
+acore_log_divider
+acore_log_success "🔍 All linting has completed!"

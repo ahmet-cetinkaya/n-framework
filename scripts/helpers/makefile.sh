@@ -2,9 +2,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck source=../../../packages/acore-scripts/src/logger.sh
+# shellcheck source=../../packages/acore-scripts/src/logger.sh
 # shellcheck disable=SC1091
-source "${SCRIPT_DIR}/../../../packages/acore-scripts/src/logger.sh"
+source "${SCRIPT_DIR}/../../packages/acore-scripts/src/logger.sh"
 
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 

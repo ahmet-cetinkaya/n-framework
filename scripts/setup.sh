@@ -28,6 +28,19 @@ source "${SCRIPT_DIR}/helpers/sync.sh"
 # shellcheck disable=SC1091
 source "${SCRIPT_DIR}/helpers/makefile.sh"
 
+OVERRIDE=false
+for arg in "$@"; do
+	case "$arg" in
+	--override) OVERRIDE=true ;;
+	esac
+done
+
+if [ "$OVERRIDE" = true ]; then
+	acore_log_info "Running in override mode..."
+fi
+
+acore_log_info "Running in override mode..."
+
 ensure_submodules
 sync_dotfiles
 ensure_tools

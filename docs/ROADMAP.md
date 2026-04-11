@@ -147,7 +147,7 @@ Planned deliverables:
 - [ ] `NFramework.Persistence.Abstractions`, `NFramework.Persistence.EFCore`, and `NFramework.Persistence.Generators` packages
 - [ ] `NFramework.Mediator.Abstractions`, `NFramework.Mediator.Mediator` (adapter for martinothamar/Mediator), and `NFramework.Mediator.Generators` packages
 - [ ] Repository abstractions (IRepository<T, TId>, IUnitOfWork), entity base classes, and pagination interfaces
-- [ ] CQRS abstractions (ICommand<TResult>, IQuery<TResult>, IRequestHandler<TRequest, TResult>, IPipelineBehavior<TRequest, TResult>)
+- [ ] CQRS abstractions (`ICommand<TResult>`, `IQuery<TResult>`, `IRequestHandler<TRequest, TResult>`, `IPipelineBehavior<TRequest, TResult>`)
 - [ ] `nfw gen command <NAME> <FEATURE>`, `nfw gen query <NAME> <FEATURE>`, and `nfw gen crud <NAME> --props <DEFINITIONS>` with interactive prompts
 - [ ] Support for `--no-input` flag and `--project` parameter for non-interactive mode
 - [ ] Feature folder auto-creation following NFramework conventions
@@ -195,18 +195,18 @@ Goal:
 Expand the compile-time foundation with cross-cutting concern abstractions, API routing source generators, and infrastructure implementations required by most real services.
 
 Why this phase matters:
-This phase delivers the essential cross-cutting building blocks (Result<T>, validators, mappers, cache, logging) and API routing automation that make NFramework a complete application platform while preserving clean boundaries.
+This phase delivers the essential cross-cutting building blocks (`Result<T>`, validators, mappers, cache, logging) and API routing automation that make NFramework a complete application platform while preserving clean boundaries.
 
 Milestones:
 
-- [ ] M7: Ship cross-cutting concern abstractions and adapters (Result<T>, validators, mappers, cache, logging)
+- [ ] M7: Ship cross-cutting concern abstractions and adapters (`Result<T>`, validators, mappers, cache, logging)
 - [ ] M8: Ship source-generated Minimal API route generation with documented naming conventions
 - [ ] M9: Deliver integration tests for cross-cutting concerns and API routing
 
 Planned deliverables:
 
 - [ ] `NFramework.CrossCuttingConcerns.Abstractions` and `NFramework.CrossCuttingConcerns.*` adapter packages
-- [ ] Result<T> type for explicit error handling without exceptions
+- [ ] `Result<T>` type for explicit error handling without exceptions
 - [ ] Validation abstractions and FluentValidation adapters
 - [ ] Mapping abstractions and Mapster adapters
 - [ ] Caching abstractions and IMemoryCache/IDistributedCache adapters
@@ -289,7 +289,7 @@ Planned deliverables:
 Dependencies:
 
 - [ ] Phase `2` CQRS abstractions must be stable
-- [ ] Phase `3` cross-cutting concerns (Result<T>) must be available for error handling
+- [ ] Phase `3` cross-cutting concerns (`Result<T>`) must be available for error handling
 - [ ] Phase `3` API routing generators must support secured endpoints
 
 Resource estimate:

@@ -18,7 +18,7 @@ Phase 2 delivers the compile-time-first application model for the .NET reference
 
 ## Package Structure
 
-```
+```text
 src/core-persistence-dotnet/
 ├── NFramework.Persistence.Abstractions/     # IRepository<T, TId>, IPagedResult<T>, IUnitOfWork
 ├── NFramework.Persistence.EFCore/           # Entity Framework Core implementation
@@ -35,25 +35,30 @@ src/nfw/  (already exists - Rust CLI with Handlebars templates)
 ## Technical Context
 
 **Language/Version**:
+
 - .NET 11 with C# 14/15 features for core packages and source generators
 - Rust 1.85+ (2024 edition) for `nfw` CLI
 
 **Primary Dependencies**:
+
 - .NET: Roslyn source generator APIs (`Microsoft.CodeAnalysis.CSharp`), analyzer diagnostic APIs
 - .NET: [martinothamar/Mediator](https://github.com/martinothamar/Mediator) v12+ for CQRS implementation
 - Rust: Existing `nfw` CLI infrastructure (clap, ratatui, crossterm, inquire, mustache)
 - Build: Native AOT publishing tooling, dotnet format
 
 **Storage**:
+
 - Configuration: YAML workspace configuration files (existing pattern in `nfw`)
 - Templates: Mustache templates and configurations in `src/nfw-templates/` submodule
 
 **Testing**:
+
 - .NET: xUnit + build fixtures for golden-file testing of generated code
 - Rust: cargo test with integration tests in `src/nfw/tests/`
 - Validation: CI checks for AOT/trimming warnings
 
 **Target Platform**:
+
 - .NET 11 runtime (Linux container baseline for benchmarks)
 - Native AOT publishing for cloud-native deployment
 - CLI tools cross-platform (Linux, macOS, Windows)
@@ -61,17 +66,20 @@ src/nfw/  (already exists - Rust CLI with Handlebars templates)
 **Project Type**: Framework SDK (core packages + code generators + developer tooling)
 
 **Performance Goals**:
+
 - Service cold-start: <50ms (Docker, 2 CPU, 4GB RAM)
 - Command generation: <5s from invocation to buildable output
 - CRUD generation: <10s from invocation to buildable output
 
 **Constraints**:
+
 - Zero Native AOT warnings in all core packages
 - Zero trimming warnings in generated code
 - No runtime assembly scanning for DI registration
 - All abstractions must have zero external package dependencies
 
 **Scale/Scope**:
+
 - 2 topic packages (Persistence, Mediator) with multiple NuGet packages each
 - Source generators in each topic package for registration/routing
 - 4+ CLI commands (gen command, gen query, gen entity, check)
@@ -166,7 +174,7 @@ src/nfw/specs/
 
 ## Package Dependencies
 
-```
+```text
 P1: core-persistence-dotnet (foundational)
   ↓
 P2: core-mediator-dotnet (depends on Persistence; uses martinothamar/Mediator)
@@ -189,11 +197,13 @@ Each package is developed **end-to-end** before moving to the next:
 ### MVP Scope (Minimum Viable Product)
 
 **Complete packages in order:**
+
 1. P1 (Persistence) — Entity base classes, Repository abstractions, EF Core implementation
 2. P2-T001 to P2-T003 (Mediator) — CQRS abstractions, MediatR adapter, handler registration generator
 3. P3-T001 to P3-T003 (nfw CLI) — gen command/query/crud commands
 
 **MVP validates:**
+
 - Entity and Repository abstractions work
 - Source generators emit trimmable code
 - CLI generates compilable artifacts
@@ -202,6 +212,7 @@ Each package is developed **end-to-end** before moving to the next:
 ### Incremental Delivery
 
 Each package is independently testable and can be released separately:
+
 - P1 releases first (foundational)
 - P2 releases after P1 (uses Entity, AggregateRoot)
 - P3 releases incrementally as templates are added
@@ -209,14 +220,17 @@ Each package is independently testable and can be released separately:
 ### Parallel Execution Opportunities
 
 **Within P1 (Persistence):**
+
 - P1-T001 (Abstractions + Entity/AggregateRoot) must complete first
 - P1-T002 (EFCore) and P1-T003 (Generators) can run in parallel after P1-T001
 
 **Within P2 (Mediator):**
+
 - P2-T001 (Abstractions) must complete first
 - P2-T002 (MediatR Adapter) and P2-T003 (Handler Generators) can run in parallel after P2-T001
 
 **Within P3 (CLI):**
+
 - P3-T005 (Templates) must complete first
 - P3-T001 to P3-T003 (CLI commands) and P3-T004 (check command) can run in parallel after P3-T005
 
@@ -226,9 +240,10 @@ Each package is independently testable and can be released separately:
 
 ## Notes
 
-**Excluded from Phase 2**: Cross-cutting concerns package (Result<T>, validators, mappers, cache, logging) and security abstractions. These will be addressed in later phases as separate packages.
+**Excluded from Phase 2**: Cross-cutting concerns package (`Result<T>`, validators, mappers, cache, logging) and security abstractions. These will be addressed in later phases as separate packages.
 
 **MediatR Integration**: We use [martinothamar/Mediator](https://github.com/martinothamar/Mediator) (the community fork of MediatR) as the underlying CQRS implementation. Our `NFramework.Mediator.Mediator` package provides an adapter layer with:
+
 - Custom pipeline behaviors for cross-cutting concerns
 - Extension methods for service registration
 - Compatibility shims for our abstractions
@@ -241,6 +256,7 @@ This approach leverages the battle-tested MediatR library while maintaining our 
 **Templates**: CLI templates live in `src/nfw-templates/` submodule with mustache format and configuration files. nfw reads template configurations to drive generation flow without hardcoded logic. Templates are version-controlled in the nfw-templates submodule.
 
 **Naming Convention**:
+
 - Repository folders: `core-*-dotnet` (GitHub org style)
 - Package names: `NFramework.*` (namespace prefix)
 

@@ -14,7 +14,7 @@ Each package is developed **end-to-end** before moving to the next:
 
 ## Package Structure
 
-```
+```text
 src/core-persistence-dotnet/
 ├── NFramework.Persistence.Abstractions/
 ├── NFramework.Persistence.EFCore/
@@ -34,13 +34,13 @@ src/nfw/  (already exists)
 
 ### P1-T001
 
-- [ ] Create spec topic in `src/core-mediator-dotnet/specs/` with spec instruction: Define the `NFramework.Mediator.Abstractions` NuGet package providing CQRS abstractions including marker interfaces, handler interface, pipeline behavior interface, event interface, and mediator interface; ensure zero dependency on infrastructure packages; include unit tests proving compile-time handler discovery.
+- [x] Create spec topic in `src/core-mediator-dotnet/specs/` with spec instruction: Define the `NFramework.Mediator.Abstractions` NuGet package providing CQRS abstractions including marker interfaces, handler interface, pipeline behavior interface, event interface, and mediator interface; ensure zero dependency on infrastructure packages; include unit tests proving compile-time handler discovery.
 
 _Maps to_: US1, US4, FR-002, FR-019
 
 ### P1-T002
 
-- [ ] Create spec topic in `src/core-mediator-dotnet/specs/` with spec instruction: Define the `NFramework.Mediator.Mediator` NuGet package providing adapter implementation for [martinothamar/Mediator](https://github.com/martinothamar/Mediator) with custom pipeline behaviors for validation, transactions, and logging; support behavior execution order and short-circuiting; ensure compatibility with MediatR v12+; include unit tests proving behavior execution.
+- [x] Create spec topic in `src/core-mediator-dotnet/specs/` with spec instruction: Define the `NFramework.Mediator.Mediator` NuGet package providing adapter implementation for [martinothamar/Mediator](https://github.com/martinothamar/Mediator) with custom pipeline behaviors for validation, transactions, and logging; support behavior execution order and short-circuiting; ensure compatibility with MediatR v12+; include unit tests proving behavior execution.
 
 _Maps to_: US4, FR-020, FR-021, FR-022
 
@@ -110,7 +110,7 @@ _Maps to_: US3, FR-016, FR-018
 
 ## Package Dependencies
 
-```
+```text
 P1: core-mediator-dotnet (foundational CQRS)
   ↓
 P2: core-persistence-dotnet (depends on Mediator abstractions)

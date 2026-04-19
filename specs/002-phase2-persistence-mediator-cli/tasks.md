@@ -9,7 +9,7 @@ Each package is developed **end-to-end** before moving to the next:
 - Abstractions (interfaces, base types)
 - Implementations (technology-specific adapters)
 - Source generators (Roslyn incremental generators)
-- CLI templates (mustache templates in nfw-templates)
+- CLI templates (tera templates in nfw-templates)
 - Tests (unit and integration)
 
 ## Package Structure
@@ -46,7 +46,7 @@ _Maps to_: US4, FR-020, FR-021, FR-022
 
 ### P1-T003
 
-- [ ] Create spec topic in `src/core-mediator-dotnet/specs/` with spec instruction: Define the `NFramework.Mediator.Generators` source generator package using incremental Roslyn API to discover handler implementations and emit DI registration code; emit diagnostics for unsupported patterns; ensure generated code is trimmable and AOT-compatible; include golden-file tests and AOT build validation.
+- [x] Create spec topic in `src/core-mediator-dotnet/specs/` with spec instruction: Define the `NFramework.Mediator.Generators` source generator package using incremental Roslyn API to discover handler implementations and emit DI registration code; emit diagnostics for unsupported patterns; ensure generated code is trimmable and AOT-compatible; include golden-file tests and AOT build validation.
 
 _Maps to_: US2, FR-007, FR-009, FR-011
 
@@ -56,21 +56,9 @@ _Maps to_: US2, FR-007, FR-009, FR-011
 
 ### P2-T001
 
-- [ ] Create spec topic in `src/core-persistence-dotnet/specs/` with spec instruction: Define the `NFramework.Persistence.Abstractions` NuGet package providing repository abstractions, entity base classes, and pagination interfaces; support CRUD operations, transactions, dynamic querying, and bulk operations; ensure zero coupling to specific persistence implementations; include unit tests with in-memory fakes.
+- [ ] Create spec topic in `src/core-persistence-dotnet/specs/` with spec instruction: Define the complete `NFramework.Persistence` package providing repository abstractions, entity base classes, pagination, Entity Framework Core implementation, and source generators: (1) Abstractions - repository abstractions, entity base classes, and pagination interfaces; support CRUD operations, transactions, dynamic querying, and bulk operations; ensure zero coupling to specific persistence implementations; include unit tests with in-memory fakes. (2) EFCore - Entity Framework Core implementation of repository abstractions with DbContext injection, unit of work, and configuration extensions; support ChangeTracker integration and eager loading; include integration tests with SQLite in-memory database. (3) Generators - source generator using incremental Roslyn API to discover repository interface declarations and emit DI registration code; emit diagnostics for configuration errors; ensure generated code is trimmable and AOT-compatible; include golden-file tests and AOT build validation.
 
-_Maps to_: US1, FR-004
-
-### P2-T002
-
-- [ ] Create spec topic in `src/core-persistence-dotnet/specs/` with spec instruction: Define the `NFramework.Persistence.EFCore` NuGet package providing Entity Framework Core implementation of repository abstractions with DbContext injection, unit of work, and configuration extensions; support ChangeTracker integration and eager loading; include integration tests with SQLite in-memory database.
-
-_Maps to_: US1, FR-004
-
-### P2-T003
-
-- [ ] Create spec topic in `src/core-persistence-dotnet/specs/` with spec instruction: Define the `NFramework.Persistence.Generators` source generator package using incremental Roslyn API to discover repository interface declarations and emit DI registration code; emit diagnostics for configuration errors; ensure generated code is trimmable and AOT-compatible; include golden-file tests and AOT build validation.
-
-_Maps to_: US2, FR-007, FR-009
+_Maps to_: US1, US2, FR-004, FR-007, FR-009
 
 ---
 
@@ -78,19 +66,19 @@ _Maps to_: US2, FR-007, FR-009
 
 ### P3-T001
 
-- [ ] Create spec topic in `src/nfw/specs/` with spec instruction: Implement the `nfw gen command <NAME> <FEATURE>` command with interactive prompts for options; support `--no-input` flag and `--project` parameter; generate command record and handler class following documented conventions; validate generated code compiles; complete in <5 seconds; include integration tests.
+- [x] Create spec topic in `src/nfw/specs/` with spec instruction: Implement the `nfw add command <NAME> <FEATURE>` command with interactive prompts for options; support `--no-input` flag and `--project` parameter; generate command record and handler class following documented conventions; validate generated code compiles; complete in <5 seconds; include integration tests.
 
 _Maps to_: US3, FR-012, FR-016, FR-018
 
 ### P3-T002
 
-- [ ] Create spec topic in `src/nfw/specs/` with spec instruction: Implement the `nfw gen query <NAME> <FEATURE>` command with interactive prompts; support `--no-input` and `--project` flags; generate query record and handler class; follow layer placement conventions; complete in <3 seconds; include integration tests.
+- [x] Create spec topic in `src/nfw/specs/` with spec instruction: Implement the `nfw add query <NAME> <FEATURE>` command with interactive prompts; support `--no-input` and `--project` flags; generate query record and handler class; follow layer placement conventions; complete in <3 seconds; include integration tests.
 
 _Maps to_: US3, FR-013
 
 ### P3-T003
 
-- [ ] Create spec topic in `src/nfw/specs/` with spec instruction: Implement the `nfw gen crud <NAME> --props <DEFINITIONS>` command that generates complete CRUD scaffolding including entity class, repository interface, DTOs, commands, queries, handlers, and HTTP endpoints; support `--id-type` parameter; create feature folder structure automatically; complete in <10 seconds; include integration tests.
+- [ ] Create spec topic in `src/nfw/specs/` with spec instruction: Implement the `nfw add crud <NAME> --props <DEFINITIONS>` command that generates complete CRUD scaffolding including entity class, repository interface, DTOs, commands, queries, handlers, and HTTP endpoints; support `--id-type` parameter; create feature folder structure automatically; complete in <10 seconds; include integration tests.
 
 _Maps to_: US3, FR-014
 
@@ -102,7 +90,7 @@ _Maps to_: US5, FR-023, FR-024
 
 ### P3-T005
 
-- [ ] Create spec topic in `src/nfw/specs/` with spec instruction: Add mustache templates and configurations to `src/nfw-templates/` for scaffolding commands, queries, crud, and API endpoints according to NFramework conventions; ensure templates generate AOT-compatible code; configure template metadata to drive nfw generation flow without hardcoded logic; include integration tests.
+- [ ] Create spec topic in `src/nfw/specs/` with spec instruction: Add tera templates and configurations to `src/nfw-templates/` for scaffolding commands, queries, crud, and API endpoints according to NFramework conventions; ensure templates generate AOT-compatible code; configure template metadata to drive nfw generation flow without hardcoded logic; include integration tests.
 
 _Maps to_: US3, FR-016, FR-018
 
@@ -127,7 +115,7 @@ P3: nfw CLI (orchestrates both packages)
 **Complete packages in order:**
 
 1. P1 (Mediator)
-2. P2-T001 to P2-T003 (Persistence)
+2. P2-T001 (Persistence)
 3. P3-T001 to P3-T003 (nfw CLI)
 
 **MVP validates:**
@@ -154,8 +142,7 @@ Each package is independently testable and releasable:
 
 **Within P2:**
 
-- P2-T001 must complete first
-- P2-T002 and P2-T003 can run in parallel after P2-T001
+- Single task P2-T001 covers all persistence package deliverables
 
 **Within P3:**
 
@@ -182,7 +169,7 @@ Each specification must reference relevant success criteria:
 - Each package creates a **single specification** with multiple tasks
 - Use the exact spec instruction text when creating downstream specifications
 - Refer to the parent orchestrator spec (`spec.md`) for complete context
-- Templates live in `src/nfw-templates/` with mustache format and configuration files
+- Templates live in `src/nfw-templates/` with tera format and configuration files
 - nfw reads template configurations to drive generation flow (no hardcoded logic)
 - All source generators must use `IIncrementalGenerator` API
 - Generated code placed in `.g.cs` files with `generated` attribute

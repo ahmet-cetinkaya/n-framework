@@ -43,7 +43,7 @@ src/nfw/  (already exists - Rust CLI with Handlebars templates)
 
 - .NET: Roslyn source generator APIs (`Microsoft.CodeAnalysis.CSharp`), analyzer diagnostic APIs
 - .NET: [martinothamar/Mediator](https://github.com/martinothamar/Mediator) v12+ for CQRS implementation
-- Rust: Existing `nfw` CLI infrastructure (clap, ratatui, crossterm, inquire, mustache)
+- Rust: Existing `nfw` CLI infrastructure (clap, ratatui, crossterm, inquire, tera)
 - Build: Native AOT publishing tooling, dotnet format
 
 **Storage**:
@@ -82,7 +82,7 @@ src/nfw/  (already exists - Rust CLI with Handlebars templates)
 
 - 2 topic packages (Persistence, Mediator) with multiple NuGet packages each
 - Source generators in each topic package for registration/routing
-- 4+ CLI commands (gen command, gen query, gen entity, check)
+- 4+ CLI commands (add command, add query, add entity, check)
 - Supports .NET service projects with 100+ handlers efficiently
 
 ## Constitution Check
@@ -166,7 +166,7 @@ src/core-mediator-dotnet/specs/
 └── 003-handler-generators/               # Handler discovery & registration source gen
 
 src/nfw/specs/
-├── 003-cli-generation-commands/          # `nfw gen command/query/crud` commands
+├── 003-cli-generation-commands/          # `nfw add command/query/crud` commands
 └── 004-build-validation/                 # `nfw check` architecture validation
 ```
 
@@ -191,7 +191,7 @@ Each package is developed **end-to-end** before moving to the next:
 1. **Abstractions** (interfaces, base types, contracts)
 2. **Implementations** (technology-specific adapters or external library integration)
 3. **Source Generators** (Roslyn incremental generators)
-4. **CLI Templates** (mustache templates in `nfw-templates`)
+4. **CLI Templates** (tera templates in `nfw-templates`)
 5. **Tests** (unit and integration)
 
 ### MVP Scope (Minimum Viable Product)
@@ -200,7 +200,7 @@ Each package is developed **end-to-end** before moving to the next:
 
 1. P1 (Persistence) — Entity base classes, Repository abstractions, EF Core implementation
 2. P2-T001 to P2-T003 (Mediator) — CQRS abstractions, MediatR adapter, handler registration generator
-3. P3-T001 to P3-T003 (nfw CLI) — gen command/query/crud commands
+3. P3-T001 to P3-T003 (nfw CLI) — add command/query/crud commands
 
 **MVP validates:**
 
@@ -253,7 +253,7 @@ This approach leverages the battle-tested MediatR library while maintaining our 
 
 **Generators**: Source generators are part of each topic package, ensuring tight coupling between abstractions and their code generation.
 
-**Templates**: CLI templates live in `src/nfw-templates/` submodule with mustache format and configuration files. nfw reads template configurations to drive generation flow without hardcoded logic. Templates are version-controlled in the nfw-templates submodule.
+**Templates**: CLI templates live in `src/nfw-templates/` submodule with tera format and configuration files. nfw reads template configurations to drive generation flow without hardcoded logic. Templates are version-controlled in the nfw-templates submodule.
 
 **Naming Convention**:
 

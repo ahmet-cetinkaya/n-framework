@@ -140,7 +140,7 @@ Milestones:
 
 - [ ] M4: Deliver foundational .NET topic packages (`NFramework.Persistence.*`, `NFramework.Mediator.*`) containing base abstractions and EF Core/MediatR implementations
 - [ ] M5: Deliver source-generated DI registration for repositories and handlers
-- [ ] M6: Deliver interactive wizard-like command, query, and CRUD generation with mustache templates and configuration-driven flow
+- [ ] M6: Deliver interactive wizard-like command, query, and CRUD generation with tera templates and configuration-driven flow
 
 Planned deliverables:
 
@@ -148,7 +148,7 @@ Planned deliverables:
 - [ ] `NFramework.Mediator.Abstractions`, `NFramework.Mediator.Mediator` (adapter for martinothamar/Mediator), and `NFramework.Mediator.Generators` packages
 - [ ] Repository abstractions (IRepository<T, TId>, IUnitOfWork), entity base classes, and pagination interfaces
 - [ ] CQRS abstractions (`ICommand<TResult>`, `IQuery<TResult>`, `IRequestHandler<TRequest, TResult>`, `IPipelineBehavior<TRequest, TResult>`)
-- [ ] `nfw gen command <NAME> <FEATURE>`, `nfw gen query <NAME> <FEATURE>`, and `nfw gen crud <NAME> --props <DEFINITIONS>` with interactive prompts
+- [ ] `nfw add command <NAME> <FEATURE>`, `nfw add query <NAME> <FEATURE>`, and `nfw add <NAME> --props <DEFINITIONS>` with interactive prompts
 - [ ] Support for `--no-input` flag and `--project` parameter for non-interactive mode
 - [ ] Feature folder auto-creation following NFramework conventions
 - [ ] Mustache templates and configurations in `src/nfw-templates/` submodule for scaffolding

@@ -2,6 +2,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
 source "$SCRIPT_DIR/../packages/acore-scripts/src/logger.sh"
 
 acore_log_info "🔄 Updating all submodules to main branch..."
